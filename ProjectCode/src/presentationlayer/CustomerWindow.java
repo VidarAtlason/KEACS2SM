@@ -258,7 +258,7 @@ public class CustomerWindow extends JFrame {
 		cbGender.addItem((Object)new String("Female"));
 		cbGender.setBounds(113, 103, 98, 22);
 		private1.add(cbGender);
-		//getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtCountryCode, lblCountryCode, txtPhoneNumber, lblPhoneNumber, txtEmail, lblEmail, txtStreetName, lblStreetName, txtStreetNumber, lblStreetNumber, txtCity, lblZipCode, lblNewLabel_1, txtPaymentInfo, chbCompany, btnSave, txtZip, lblCountry, textField_1, lblId, lblCompanyName, txtCompanyName, lblCvr, txtCVR, lblFaxno, txtFaxNo, lblContactPerson, txtContactPersonName, lblContactPhoneno, txtContactPhoneNo, private1, company, lblNewLabel, txtFirstName, lblLastName, txtLastName, lblBirthdate, txtBirthDate, lblGender, cbGender}));
+		getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtCountryCode, lblCountryCode, txtPhoneNumber, lblPhoneNumber, txtEmail, lblEmail, txtStreetName, lblStreetName, txtStreetNumber, lblStreetNumber, txtCity, lblZipCode, lblNewLabel_1, txtPaymentInfo, chbCompany, btnSave, txtZip, lblCountry, textField_1, lblId, lblCompanyName, txtCompanyName, lblCvr, txtCVR, lblFaxno, txtFaxNo, lblContactPerson, txtContactPersonName, lblContactPhoneno, txtContactPhoneNo, private1, company, lblNewLabel, txtFirstName, lblLastName, txtLastName, lblBirthdate, txtBirthDate, lblGender, cbGender}));
 		company.setVisible(false);
 		this.setVisible(true);
 	}

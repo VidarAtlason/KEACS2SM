@@ -1,21 +1,23 @@
 package presentationlayer;
 
 import javax.swing.JFrame;
-import javax.swing.JTextField;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
-import javax.swing.DropMode;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
-public class CottageWindow extends JFrame{
+public class CottageWindow extends JFrame
+{
+	private JComboBox cbWeekFrom;
+	private JComboBox cbWeekTo;
+//	private JLabel lblDateFrom;
+//	private JLabel lblDateTo;
+	
 	public CottageWindow() {
 		setTitle("ReserveCottage");
 		getContentPane().setLayout(null);
@@ -38,29 +40,44 @@ public class CottageWindow extends JFrame{
 		lblCustomer.setBounds(44, 146, 56, 16);
 		getContentPane().add(lblCustomer);
 		
+		// Add list of weekNo to combobox
+		String[] weekNo = new String[52];
+		for (int i = 0; i < weekNo.length; i++)
+		{
+			weekNo[i] = "" + (i + 1);
+		}
+		
 		JLabel lblWeekfrom = new JLabel("WeekFrom:");
 		lblWeekfrom.setBounds(45, 185, 71, 16);
 		getContentPane().add(lblWeekfrom);
 		
-		JComboBox cbWeekFrom = new JComboBox();
+		cbWeekFrom = new JComboBox(weekNo);
 		cbWeekFrom.setBounds(124, 182, 56, 22);
 		getContentPane().add(cbWeekFrom);
+		cbWeekFrom.addActionListener(new ActionListener()
+		{
+			
+			public void actionPerformed(ActionEvent e)
+			{
+				cbWeekFromActionPerformed(e);				
+			}
+		});
 		
 		JLabel lblWeekto = new JLabel("WeekTo:");
 		lblWeekto.setBounds(202, 185, 71, 16);
 		getContentPane().add(lblWeekto);
 		
-		JComboBox cbWeekTo = new JComboBox();
+		cbWeekTo = new JComboBox(weekNo);
 		cbWeekTo.setBounds(281, 182, 56, 22);
 		getContentPane().add(cbWeekTo);
 		
-		JLabel lblDateFrom = new JLabel("10/10/1010");
-		lblDateFrom.setBounds(109, 214, 71, 16);
-		getContentPane().add(lblDateFrom);
+//		lblDateFrom = new JLabel("10/10/1010");
+//		lblDateFrom.setBounds(109, 214, 71, 16);
+//		getContentPane().add(lblDateFrom);
 		
-		JLabel lblDateTo = new JLabel("10/10/1010");
-		lblDateTo.setBounds(266, 214, 71, 16);
-		getContentPane().add(lblDateTo);
+//		lblDateTo = new JLabel("10/10/1010");
+//		lblDateTo.setBounds(266, 214, 71, 16);
+//		getContentPane().add(lblDateTo);
 		
 		JLabel lblPriceStatic = new JLabel("Price:");
 		lblPriceStatic.setBounds(45, 263, 71, 16);
@@ -106,5 +123,12 @@ public class CottageWindow extends JFrame{
 		this.setSize(new Dimension(479, 449));
 		
 		this.setVisible(true);
+	}
+	
+	private void cbWeekFromActionPerformed(ActionEvent e)
+	{
+		cbWeekFrom = (JComboBox) e.getSource();
+		int selectedWeekNo = cbWeekFrom.getSelectedIndex();
+
 	}
 }
