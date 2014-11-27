@@ -1,4 +1,4 @@
-package applicationlayer.classes;
+package controller.applicationclasses;
 
 public class Equipment
 {

@@ -1,4 +1,4 @@
-package presentationlayer;
+package view;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -40,6 +40,7 @@ public class CustomerWindow extends JFrame {
 	private JPanel company;
 	private final JPanel private1;
 	private JComboBox cbGender;
+	private JButton btnSave;
 	public CustomerWindow() {
 		setTitle("Customer");
 		this.setSize(476, 600);
@@ -132,7 +133,7 @@ public class CustomerWindow extends JFrame {
 			}
 		});
 		
-		JButton btnSave = new JButton("Save");
+		btnSave = new JButton("Save");
 		btnSave.setBounds(0, 447, 85, 29);
 		getContentPane().add(btnSave);
 		
@@ -258,8 +259,11 @@ public class CustomerWindow extends JFrame {
 		cbGender.addItem((Object)new String("Female"));
 		cbGender.setBounds(113, 103, 98, 22);
 		private1.add(cbGender);
-		getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtCountryCode, lblCountryCode, txtPhoneNumber, lblPhoneNumber, txtEmail, lblEmail, txtStreetName, lblStreetName, txtStreetNumber, lblStreetNumber, txtCity, lblZipCode, lblNewLabel_1, txtPaymentInfo, chbCompany, btnSave, txtZip, lblCountry, textField_1, lblId, lblCompanyName, txtCompanyName, lblCvr, txtCVR, lblFaxno, txtFaxNo, lblContactPerson, txtContactPersonName, lblContactPhoneno, txtContactPhoneNo, private1, company, lblNewLabel, txtFirstName, lblLastName, txtLastName, lblBirthdate, txtBirthDate, lblGender, cbGender}));
+		//getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtCountryCode, lblCountryCode, txtPhoneNumber, lblPhoneNumber, txtEmail, lblEmail, txtStreetName, lblStreetName, txtStreetNumber, lblStreetNumber, txtCity, lblZipCode, lblNewLabel_1, txtPaymentInfo, chbCompany, btnSave, txtZip, lblCountry, textField_1, lblId, lblCompanyName, txtCompanyName, lblCvr, txtCVR, lblFaxno, txtFaxNo, lblContactPerson, txtContactPersonName, lblContactPhoneno, txtContactPhoneNo, private1, company, lblNewLabel, txtFirstName, lblLastName, txtLastName, lblBirthdate, txtBirthDate, lblGender, cbGender}));
 		company.setVisible(false);
 		this.setVisible(true);
+	}
+	public void addActionlisteners(ActionListener listener){
+		btnSave.addActionListener(listener);
 	}
 }

@@ -1,26 +1,23 @@
-package applicationlayer.classes;
+package controller.applicationclasses;
 
 public abstract class Customer
 {
-
 	protected int customerId;
 	protected String email;
 	protected String phone;
 	protected String street;
 	protected String houseNumber;
-	protected String postcode;
-	protected String city;
+	protected Zip zip;
 	protected String country;
 	
-	protected Customer(int customerId, String email, String phone, String street, String houseNumber, String postCode, String city, String country)
+	protected Customer(int customerId, String email, String phone, String street, String houseNumber, Zip zip, String country)
 	{
 		this.customerId = customerId;
 		this.email = email;
 		this.phone = phone;
 		this.street = street;
 		this.houseNumber = houseNumber;
-		this.postcode = postCode;
-		this.city = city;
+		this.zip = zip;
 		this.country = country;
 	}
 	
@@ -49,14 +46,9 @@ public abstract class Customer
 		return this.houseNumber;
 	}
 	
-	public String getPostcode()
+	public Zip getZip()
 	{
-		return this.postcode;
-	}
-	
-	public String getCity()
-	{
-		return this.city;
+		return zip;
 	}
 	
 	public String getCountry()

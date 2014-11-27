@@ -1,4 +1,4 @@
-package presentationlayer;
+package view;
 
 import javax.swing.JFrame;
 import java.awt.Dimension;
@@ -21,7 +21,7 @@ public class CottageWindow extends JFrame
 	public CottageWindow() {
 		setTitle("ReserveCottage");
 		getContentPane().setLayout(null);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JTextArea txtaCottageInfo = new JTextArea();
 		txtaCottageInfo.setRows(8);
@@ -46,7 +46,11 @@ public class CottageWindow extends JFrame
 		{
 			weekNo[i] = "" + (i + 1);
 		}
-		
+		String [] yearNo = new String[10];
+		for (int i = 0; i < yearNo.length; i++)
+		{
+			yearNo[i] = "" + (i+2014);
+		}
 		JLabel lblWeekfrom = new JLabel("WeekFrom:");
 		lblWeekfrom.setBounds(45, 185, 71, 16);
 		getContentPane().add(lblWeekfrom);
@@ -120,6 +124,22 @@ public class CottageWindow extends JFrame
 		});
 		btnNewCustomer.setBounds(306, 143, 117, 25);
 		getContentPane().add(btnNewCustomer);
+		
+		JLabel lblYearFrom = new JLabel("YearFrom");
+		lblYearFrom.setBounds(45, 224, 71, 16);
+		getContentPane().add(lblYearFrom);
+		
+		JComboBox cbYearFrom = new JComboBox(yearNo);
+		cbYearFrom.setBounds(124, 221, 56, 22);
+		getContentPane().add(cbYearFrom);
+		
+		JLabel lblYearto = new JLabel("YearTo");
+		lblYearto.setBounds(202, 224, 71, 16);
+		getContentPane().add(lblYearto);
+		
+		JComboBox cbYearTo = new JComboBox(yearNo);
+		cbYearTo.setBounds(281, 221, 56, 22);
+		getContentPane().add(cbYearTo);
 		this.setSize(new Dimension(479, 449));
 		
 		this.setVisible(true);

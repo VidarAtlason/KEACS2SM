@@ -1,4 +1,4 @@
-package applicationlayer.classes;
+package controller.applicationclasses;
 
 public class Company extends Customer
 {
@@ -7,17 +7,15 @@ public class Company extends Customer
 	private String CVR;
 	private String fax;
 	private String contactPersonName;
-	private String contactPersonPhoneNo;
-
-	public Company(int customerId, String email, String phone,String street, String houseNumber, String postCode, String city,
-			String country, String companyName, String CVR, String fax, String contactPersonName, String contactPersonPhone)
+	
+	public Company(int customerId, String email, String phone,String street, String houseNumber, Zip zip,
+			String country, String companyName, String CVR, String fax, String contactPersonName)
 	{
-		super(customerId, email, phone, street, houseNumber, postCode, city, country);
+		super(customerId, email, phone, street, houseNumber, zip, country);
 		this.companyName = companyName;
 		this.CVR = CVR;
 		this.fax = fax;
 		this.contactPersonName = contactPersonName;
-		this.contactPersonPhoneNo = contactPersonPhone;
 	}
 
 	public String getCompanyName()
@@ -38,11 +36,6 @@ public class Company extends Customer
 	public String getContactPersonName()
 	{
 		return contactPersonName;
-	}
-	
-	public String getContactPersonPhoneNo()
-	{
-		return contactPersonPhoneNo;
 	}
 	
 	public double getDiscountRate()

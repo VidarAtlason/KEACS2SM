@@ -1,4 +1,4 @@
-package applicationlayer.classes;
+package controller.applicationclasses;
 
 import java.util.ArrayList;
 
@@ -10,16 +10,16 @@ public class Cottage
 	private String cottageName;
 	private String street;
 	private String houseNumber;
-	private int postCode;
+	private Zip zip;
 
-	public Cottage(int cottageId, CottageType cottageType, String name, String street, String houseNo, int postCode)
+	public Cottage(int cottageId, CottageType cottageType, String name, String street, String houseNo, Zip zip)
 	{
 		this.cottageId = cottageId;
 		this.cottageType = cottageType;
 		this.cottageName = name;
 		this.street = street;
 		this.houseNumber = houseNo;
-		this.postCode = postCode;
+		this.zip = zip;
 	}
 	
 	public int getCottageId()
@@ -47,9 +47,9 @@ public class Cottage
 		return houseNumber;
 	}
 	
-	public int getPostCode()
+	public Zip getZip()
 	{
-		return postCode;
+		return zip;
 	}
 	
 	public boolean isAvailable(int weekFrom, int yearFrom)
