@@ -10,6 +10,15 @@ public class PrivateCustomer extends Customer
 	private boolean gender;
 	private Calendar birthdate;
 	
+	public PrivateCustomer(int customerId, String firstName, String lastName )
+	{
+		super(customerId);
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.gender = true;
+		this.birthdate = null;		
+	}
+	
 	public PrivateCustomer(int customerId, String email, String phone,String street, String houseNumber, Zip zip,
 			String country, String firstName, String lastName, boolean gender, Calendar birthdate)
 	{
@@ -38,6 +47,26 @@ public class PrivateCustomer extends Customer
 	public boolean getGender()
 	{
 		return this.gender;
+	}
+	
+	public void setFirstName(String firstName)
+	{
+		this.firstName = firstName;
+	}
+	
+	public void setLastName(String lastName)
+	{
+		this.lastName = lastName;
+	}
+	
+	public void setGender(boolean gender)
+	{
+		this.gender = gender;
+	}
+	
+	public void setBirthdate(Calendar birthdate)
+	{
+		this.birthdate = birthdate;
 	}
 
 }

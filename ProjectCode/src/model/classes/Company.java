@@ -8,6 +8,15 @@ public class Company extends Customer
 	private String fax;
 	private String contactPersonName;
 	
+	public Company(int customerId, String companyName)
+	{
+		super(customerId);
+		this.companyName = companyName;
+		this.CVR = null;
+		this.fax = null;
+		this.contactPersonName = null;
+		
+	}
 	public Company(int customerId, String email, String phone,String street, String houseNumber, Zip zip,
 			String country, String companyName, String CVR, String fax, String contactPersonName)
 	{
@@ -38,10 +47,29 @@ public class Company extends Customer
 		return contactPersonName;
 	}
 	
+	public void setCompanyName(String companyName)
+	{
+		this.companyName = companyName;
+	}
+	
+	public void setCVR(String cVR)
+	{
+		CVR = cVR;
+	}
+	
+	public void setFax(String fax)
+	{
+		this.fax = fax;
+	}
+	
+	public void setContactPersonName(String contactPersonName)
+	{
+		this.contactPersonName = contactPersonName;
+	}
+	
 	public double getDiscountRate()
 	{
-		// TODO - implement Company.getDiscountRate
-		throw new UnsupportedOperationException();
+		return 0.1; // company gets a 10% discount
 	}
 
 }

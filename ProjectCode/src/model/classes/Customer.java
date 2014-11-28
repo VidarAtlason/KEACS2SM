@@ -10,7 +10,18 @@ public abstract class Customer
 	protected Zip zip;
 	protected String country;
 	
-	protected Customer(int customerId, String email, String phone, String street, String houseNumber, Zip zip, String country)
+	public Customer(int customerId)
+	{
+		this.customerId = customerId;
+		this.email = null;
+		this.phone = null;
+		this.street = null;
+		this.houseNumber = null;
+		this.zip = null;
+		this.country = null;
+	}
+	
+	public Customer(int customerId, String email, String phone, String street, String houseNumber, Zip zip, String country)
 	{
 		this.customerId = customerId;
 		this.email = email;
@@ -54,6 +65,40 @@ public abstract class Customer
 	public String getCountry()
 	{
 		return this.country;
+	}
+	
+	public void setCustomerId(int customerId)
+	{
+		this.customerId = customerId;
+	}
+	
+	public void setEmail(String email)
+	{
+		this.email = email;
+	}
+	
+	public void setPhone(String phone)
+	{
+		this.phone = phone;
+	}
+	
+	public void setStreet(String street)
+	{
+		this.street = street;
+	}
+	public void setHouseNumber(String houseNumber)
+	{
+		this.houseNumber = houseNumber;
+	}
+	 
+	public void setZip(Zip zip)
+	{
+		this.zip = zip;
+	}
+	 
+	public void setCountry(String country)
+	{
+		this.country = country;
 	}
 
 }

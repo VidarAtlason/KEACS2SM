@@ -2,16 +2,16 @@ package model.classes;
 
 public class Zip
 {
-	protected String zipCode; 
+	protected int zipCode; 
 	protected String city;
 	
-	public Zip(String zipCode, String city)
+	public Zip(int code, String city)
 	{
-		this.zipCode = zipCode;
+		this.zipCode = code;
 		this.city = city;
 	}
 	
-	public String getZipCode()
+	public int getZipCode()
 	{
 		return zipCode;
 	}
@@ -21,7 +21,7 @@ public class Zip
 		return city;
 	}
 	
-	public void setZipCode(String zipCode)
+	public void setZipCode(int zipCode)
 	{
 		this.zipCode = zipCode;
 	}

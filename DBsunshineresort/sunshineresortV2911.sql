@@ -26,12 +26,12 @@ DROP TABLE IF EXISTS `company`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `company` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `cvr` int(8) NOT NULL,
+  `cvr` varchar(10) NOT NULL,
   `email` varchar(155) NOT NULL,
   `name` varchar(155) NOT NULL,
   `contactName` varchar(155) NOT NULL,
-  `phoneNo` int(11) NOT NULL,
-  `faxNo` int(11) DEFAULT NULL,
+  `phoneNo` varchar(15) NOT NULL,
+  `faxNo` varchar(15) DEFAULT NULL,
   `street` varchar(75) NOT NULL,
   `houseNumber` varchar(5) NOT NULL,
   `zip_fk` int(4) NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE `company` (
 
 LOCK TABLES `company` WRITE;
 /*!40000 ALTER TABLE `company` DISABLE KEYS */;
-INSERT INTO `company` VALUES (1,57685000,'cph@cph.dk','Copenhagen Ideas','Luke Skywalker',27395518,27396478,'BALDERSBÆKVEJ','11A',3520,61);
+INSERT INTO `company` VALUES (1,'57685000','cph@cph.dk','Copenhagen Ideas','Luke Skywalker','27395518','27396478','BALDERSBÆKVEJ','11A',3520,61);
 /*!40000 ALTER TABLE `company` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -123,7 +123,7 @@ CREATE TABLE `country` (
   `id` int(4) NOT NULL,
   `short_name` varchar(100) NOT NULL,
   `long_name` varchar(150) NOT NULL,
-  `calling_code` int(4) NOT NULL,
+  `calling_code` varchar(4) NOT NULL,
   `iso3` varchar(3) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -135,7 +135,7 @@ CREATE TABLE `country` (
 
 LOCK TABLES `country` WRITE;
 /*!40000 ALTER TABLE `country` DISABLE KEYS */;
-INSERT INTO `country` VALUES (61,'Denmark','Kingdom of Denmark',45,'DNK');
+INSERT INTO `country` VALUES (61,'Denmark','Kingdom of Denmark','45','DNK');
 /*!40000 ALTER TABLE `country` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -204,7 +204,7 @@ CREATE TABLE `privatecustomer` (
   `fName` varchar(85) NOT NULL,
   `lName` varchar(85) NOT NULL,
   `email` varchar(155) NOT NULL,
-  `phoneNo` int(11) NOT NULL,
+  `phoneNo` varchar(13) NOT NULL,
   `street` varchar(75) NOT NULL,
   `houseNumber` varchar(5) NOT NULL,
   `zip_fk` int(4) NOT NULL,
@@ -225,7 +225,7 @@ CREATE TABLE `privatecustomer` (
 
 LOCK TABLES `privatecustomer` WRITE;
 /*!40000 ALTER TABLE `privatecustomer` DISABLE KEYS */;
-INSERT INTO `privatecustomer` VALUES (1,'Marie','Birkehoj','mb@hotmail.com',37292020,'GREVE MAIN','17',2450,61,'\0','1988-11-11');
+INSERT INTO `privatecustomer` VALUES (1,'Marie','Birkehoj','mb@hotmail.com','37292020','GREVE MAIN','17',2450,61,'\0','1988-11-11');
 /*!40000 ALTER TABLE `privatecustomer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -262,13 +262,13 @@ DROP TABLE IF EXISTS `reservation`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `reservation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `reserveDate` datetime NOT NULL,
+  `reserveDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `weekFrom` int(2) NOT NULL,
   `weekTo` int(2) NOT NULL,
   `yearFrom` int(4) NOT NULL,
   `yearTo` int(4) NOT NULL,
   `paid` bit(1) NOT NULL,
-  `price` decimal(6,2) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
   `privatecustomer_fk` int(11) DEFAULT NULL,
   `company_fk` int(11) DEFAULT NULL,
   `cottage_fk` int(11) NOT NULL,
@@ -347,4 +347,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-28 20:56:15
+-- Dump completed on 2014-11-28 22:51:55
