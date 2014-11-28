@@ -1,4 +1,4 @@
-package controller.applicationclasses;
+package model.classes;
 
 import java.util.Calendar;
 

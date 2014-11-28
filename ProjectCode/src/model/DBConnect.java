@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DBConnect
 {
@@ -18,42 +20,25 @@ public class DBConnect
 	 * but they can inherit from this DBConnect class for these properties and open/close connection methods  
 	 */
 	
-	private Connection conn;
-    private PreparedStatement preparedStatement;
-    private ResultSet result;
+	private final static String URL = "jdbc:mysql://localhost";
+    private final static String PORT = "3306";
+    private final static String USER = "root";
+    private final static String PASS = "Oneonefour114";//enter the password here if you have one
+    private final static String DB = "sunshineresort";
     
-    /**
-     * open connection to db
-     */
-    public void openConnection()
+    public static Connection getConnection()
     {
+        String urlForConnection = URL + ":" + PORT + "/" + DB;
         try
-		{
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/sunshineresortdb?user=root&password=");
-		} 
-        catch (SQLException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(urlForConnection, USER, PASS);
+            return conn;
+        } catch (ClassNotFoundException |SQLException ex)
+        {
+            Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
-    
-    /**
-     * close connection to db
-     */
-    public void closeConnection()
-	{
-		if (conn != null)
-		{
-			try
-			{
-				conn.close();
-			} catch (SQLException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
     
 }

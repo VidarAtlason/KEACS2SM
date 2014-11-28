@@ -2,21 +2,42 @@ package view;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JLayeredPane;
+
+
+
+
+
+
+
+
+
+
+
+import model.classes.Company;
+import model.classes.Customer;
+import model.classes.PrivateCustomer;
+import model.classes.Zip;
+
+
 //import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
+import java.util.Calendar;
 
 
 public class CustomerWindow extends JFrame {
@@ -41,6 +62,7 @@ public class CustomerWindow extends JFrame {
 	private final JPanel private1;
 	private JComboBox cbGender;
 	private JButton btnSave;
+	final JCheckBox chbCompany;
 	public CustomerWindow() {
 		setTitle("Customer");
 		this.setSize(476, 600);
@@ -113,7 +135,7 @@ public class CustomerWindow extends JFrame {
 		getContentPane().add(txtPaymentInfo);
 		txtPaymentInfo.setColumns(10);
 		
-		final JCheckBox chbCompany = new JCheckBox("Company");
+		chbCompany = new JCheckBox("Company");
 		chbCompany.setBounds(364, 442, 86, 25);
 		getContentPane().add(chbCompany);
 		chbCompany.addActionListener(new ActionListener() {
@@ -263,7 +285,26 @@ public class CustomerWindow extends JFrame {
 		company.setVisible(false);
 		this.setVisible(true);
 	}
-	public void addActionlisteners(ActionListener listener){
-		btnSave.addActionListener(listener);
+	public boolean isCompany(){
+		if (chbCompany.isSelected())
+			return true;
+		return false;
+	}
+	public void addButtonActionListener(ActionListener actionListener) {
+		btnSave.addActionListener(actionListener);
+	}
+	public Company getCompany(){
+		return new Company(0, txtEmail.getText(), txtPhoneNumber.getText(),
+				txtStreetName.getText(),txtStreetNumber.getText(), new Zip(txtZip.getText(),"Norrebro"),
+				txtCountryCode.getText(), txtCompanyName.getText(), txtCVR.getText(),
+				txtFaxNo.getText(),txtContactPersonName.getText());
+	}
+	public Customer getCustomer(){
+		Calendar c = Calendar.getInstance();
+		c.set(1998, Calendar.MARCH, 15);
+		return new PrivateCustomer(0,txtEmail.getText(), txtPhoneNumber.getText(),
+				txtStreetName.getText(),txtStreetNumber.getText(), new Zip(txtZip.getText(),"Norrebro"),
+				txtCountryCode.getText(),txtFirstName.getText(),txtLastName.getText(),(cbGender.getSelectedIndex()==1)?true:false,
+				c);
 	}
 }

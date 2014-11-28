@@ -1,4 +1,4 @@
-package controller.applicationclasses;
+package model.classes;
 
 public class Company extends Customer
 {
