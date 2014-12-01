@@ -100,5 +100,30 @@ public abstract class Customer
 	{
 		this.country = country;
 	}
-
+	
+	public String getCustomerName()
+	{
+		if(this instanceof Company)
+		{
+			return ((Company) this).getCompanyName();
+		}
+		else if (this instanceof PrivateCustomer)
+		{
+			return ((PrivateCustomer) this).getFirstName() + " " + ((PrivateCustomer) this).getLastName();
+		}
+		else 
+		{
+			return null;
+		}
+	}
+	
+	public boolean isCompany()
+	{
+		return (this instanceof Company);
+	}
+	
+	public String toString()
+	{
+		return this.getCustomerName();
+	}
 }

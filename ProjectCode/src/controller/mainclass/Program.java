@@ -1,8 +1,11 @@
 package controller.mainclass;
 
 import model.ReservationConnect;
+import model.classes.Company;
 import model.classes.Cottage;
 import model.classes.CottageType;
+import model.classes.Customer;
+import model.classes.PrivateCustomer;
 import model.classes.Zip;
 import controller.CottageController;
 import controller.CustomerController;
@@ -22,6 +25,8 @@ public class Program
 		//new MainWindow();
 		//new CustomerController();
 		//ReservationConnect.insertNewReservation(); // test connection
+		
+
 	}
 
 }

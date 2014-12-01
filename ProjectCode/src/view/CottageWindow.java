@@ -10,10 +10,13 @@ import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
 
+import controller.CottageController;
 import model.classes.Cottage;
+import model.classes.Customer;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.Calendar;
 
 
 public class CottageWindow extends JFrame
@@ -47,7 +50,7 @@ public class CottageWindow extends JFrame
 		lblCottageInformation.setBounds(47, 13, 125, 16);
 		getContentPane().add(lblCottageInformation);
 		
-		cbCustomer = new JComboBox();
+		cbCustomer = new JComboBox(new CottageController().getCustomersArray());
 		cbCustomer.setBounds(124, 143, 170, 22);
 		getContentPane().add(cbCustomer);
 		
@@ -61,10 +64,12 @@ public class CottageWindow extends JFrame
 		{
 			weekNo[i] = "" + (i + 1);
 		}
+		
+		// Add list of years to combobox
 		String [] yearNo = new String[10];
 		for (int i = 0; i < yearNo.length; i++)
 		{
-			yearNo[i] = "" + (i+2014);
+			yearNo[i] = "" + (i+ Calendar.getInstance().get(Calendar.YEAR));
 		}
 		JLabel lblWeekfrom = new JLabel("WeekFrom:");
 		lblWeekfrom.setBounds(45, 185, 71, 16);
@@ -160,5 +165,76 @@ public class CottageWindow extends JFrame
 				"\nBeds: " + noOfBeds + 
 				"\nStandard price per week: " + standardPrice;
 		txtaCottageInfo.setText(fullText);
+	
 	}
+	
+	// get selected items in combobox
+	public int getSelectedWeekFrom()
+	{
+		return cbWeekFrom.getSelectedIndex() + 1;
+	}
+	
+	public int getSelectedWeekTo()
+	{
+		return cbWeekTo.getSelectedIndex() + 1;
+	}
+	
+	public int getSelectedYearFrom()
+	{
+		return cbYearFrom.getSelectedIndex() + 1 + Calendar.getInstance().get(Calendar.YEAR);
+	}
+	
+	public int getSelectedYearTo()
+	{
+		return cbYearTo.getSelectedIndex() + 1 + Calendar.getInstance().get(Calendar.YEAR);
+	}
+	
+	public int getSelectedCustomer()
+	{
+		return cbCustomer.getSelectedIndex();
+	}
+	
+	// set selected item in combobox
+	public void setSelectedWeekFrom(int index)
+	{
+		cbWeekFrom.setSelectedIndex(index);
+	}
+	
+	public void setSelectedWeekTo(int index)
+	{
+		cbWeekTo.setSelectedIndex(index);
+	}
+	
+	public void setSelectedYearFrom(int index)
+	{
+		cbYearFrom.setSelectedIndex(index);
+	}
+	
+	public void setSelectedYearTo(int index)
+	{
+		cbYearTo.setSelectedIndex(index);
+	}
+	
+	// set price-related labels
+	public void setPricelabel(String s)
+	{
+		lblPrice.setText(s);
+	}
+	
+	public void setDiscountLabel(String s)
+	{
+		lblDiscount.setText(s);
+	}
+	
+	public void setTotalPriceLabel(String s)
+	{
+		lblTotalPrice.setText(s);
+	}
+	
+	// action listener
+	public void addCbWeekFromActionListener(ActionListener actionListener) 
+	{
+		cbWeekFrom.addActionListener(actionListener);
+	}
+
 }

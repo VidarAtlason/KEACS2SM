@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import model.classes.Company;
@@ -14,7 +15,7 @@ public class CustomerConnect
 {
 	public static List<Customer> getAllCompanies()
 	{
-		List<Customer> customers = null;
+		List<Customer> customers = new ArrayList<Customer>();
 		try
 		{
 			String sql = "Select * from company order by name;";
@@ -39,7 +40,7 @@ public class CustomerConnect
 	
 	public static List<Customer> getAllPrivateCustomers()
 	{
-		List<Customer> privateCustomers = null;
+		List<Customer> privateCustomers = new ArrayList<Customer>();
 		try
 		{
 			String sql = "Select * from privatecustomer order by fName;";
