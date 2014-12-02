@@ -263,10 +263,8 @@ DROP TABLE IF EXISTS `reservation`;
 CREATE TABLE `reservation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `reserveDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `weekFrom` int(2) NOT NULL,
-  `weekTo` int(2) NOT NULL,
-  `yearFrom` int(4) NOT NULL,
-  `yearTo` int(4) NOT NULL,
+  `durationFrom` int(6) NOT NULL,
+  `durationTo` int(6) NOT NULL,
   `paid` bit(1) NOT NULL,
   `price` decimal(10,2) NOT NULL,
   `privatecustomer_fk` int(11) DEFAULT NULL,
@@ -279,7 +277,7 @@ CREATE TABLE `reservation` (
   CONSTRAINT `reservation_` FOREIGN KEY (`privatecustomer_fk`) REFERENCES `privatecustomer` (`id`),
   CONSTRAINT `reservation_company` FOREIGN KEY (`company_fk`) REFERENCES `company` (`id`),
   CONSTRAINT `reservation_cottage` FOREIGN KEY (`cottage_fk`) REFERENCES `cottage` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -292,6 +290,30 @@ LOCK TABLES `reservation` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `user_log`
+--
+
+DROP TABLE IF EXISTS `user_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_log` (
+  `userId` int(11) NOT NULL,
+  `timestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`userId`),
+  CONSTRAINT `fk_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_log`
+--
+
+LOCK TABLES `user_log` WRITE;
+/*!40000 ALTER TABLE `user_log` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_log` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -299,9 +321,10 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(60) NOT NULL,
   `password` varchar(126) NOT NULL,
-  PRIMARY KEY (`username`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -347,4 +370,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-28 22:51:55
+-- Dump completed on 2014-12-02 14:33:45
