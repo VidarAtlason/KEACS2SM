@@ -93,9 +93,9 @@ public class CustomerConnect
 	
 	
 	/**
-	 * This method build and executes the a query that adds a new customer to the database.
+	 * Inserts information to the database.
 	 * 
-	 * @param PrivateCustomer or Company
+	 * @param Company
 	 * @author Martin
 	 */
 	public void addNewCustomer(PrivateCustomer newPrivateCustomer) throws SQLException{
@@ -118,13 +118,38 @@ public class CustomerConnect
 				Calendar birthday = newPrivateCustomer.getBirthdate();
 				
 				int zipCode = zip.getZipCode();
+				
+				// I played around with this one for some time. And i figured with Alex, that the data conversion don't happens properly
+				// in most .parse/.get/.to methods. With using the .getTimeInMillis(), the conversion apparently happens accurate enough
+				// for the Date to handle it correctly.
+				// Also note, that I have been using the java.sql.Date to accurately point on the SQL Data datatype and not the Java Date datatype.
 				java.sql.Date bdate = new Date(birthday.getTimeInMillis());
 				
-				// Can't figure out how to handle this one.
-	
 				sql = " INSERT INTO customer (fName, lName, email, phoneNo, street, houseNumer, zip, country_fk, gender, birthdate)"
 				        + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+				
+				//Study note.
+				/* Essentially, I could do the following prep.setSomething in a different way.
+				 * If I set up the following prepared statements this way, it work just fine.
+				 * 
+				 * prep.setString (1, newPrivateCustomer.getFirstName());
+				 * 
+				 * 				
+				 * But in some of the cases, I will encounter a datatype where i need to do some conversion
+				 * 
+				 * prep.setInt (4, Integer.parseInt(newPrivateCustomer.getPhone()));
+				 * 
+				 * Personally I find this quite messy, and like to seperate the actual dataconversion and the setting of data.
+				 * I do this, to break the logic up, so I first convert, and after that set. The goal is to reduce confusion,
+				 * but the tradeof is even more code.
+				 * 
+				 * In the future, I might very well not seperate the code, as I in the long run, found it abit tedious to make double as
+				 * much code as i needed.
+				 */
+				
+
+				
 				prep.setString (1, fName);
 				prep.setString (2, lName);
 				prep.setString (3, email);
@@ -139,12 +164,21 @@ public class CustomerConnect
 				prep.execute();			
 
 			} catch(Exception e){
-				//System.err.println("Informations was not submitted to the database.");
+				System.err.println("Informations was not submitted to the database.");
 				System.err.println(e);
 			}
 		} catch (Exception e){
 		} finally {
-			
+			/*
+			 * These finallys is introduced, to make sure that the different resources (connections/preparedStatements)
+			 * is closed after use. This releases resources that the system uses.
+			 * 
+			 * It might be overkill for this system as it is not scaled into a size where resources might become a problem.
+			 * I assume that Javas own garbage collection could do the job just fine.
+			 * 
+			 * But I still find it as a good practice. Becouse the if the project was scaled up, or the project was transfered
+			 * to a mobile platform, the resource conservation politic could become paramount to the system.
+			 */
 			if (prep != null){
 				prep.close();
 			
@@ -156,9 +190,9 @@ public class CustomerConnect
 	
 	
 	/**
-	 * This method build and executes the a query that adds a new customer to the database.
+	 * Inserts information to the database.
 	 * 
-	 * @param PrivateCustomer or Company
+	 * @param Company
 	 * @author Martin
 	 */
 	public void addNewCustomer(Company newCompany) throws SQLException{
@@ -189,15 +223,6 @@ public class CustomerConnect
 			sql = " INSERT INTO company (cvr, email, name, contactName, phoneNo, faxNo, steet, houseNumber, zip_fk, country_fk)"
 			        + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 					
-
-	
-			//Study note.
-			/* Essentially, I could do the following prep.setSomething in a different way.
-			 * 
-			 * 
-			 */
-			
-			
 			prep.setInt (1, cvr);
 			prep.setString (2, email);
 			prep.setString (3, name);
