@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,13 +16,17 @@ import model.classes.Zip;
 
 public class CustomerConnect
 {
-	public static List<Customer> getAllCompanies()
+	public static List<Customer> getAllCompanies() throws SQLException
 	{
+		String sql = "";
+		Connection conn = DBConnect.getConnection();	
+		PreparedStatement prep = conn.prepareStatement(sql);	
+		
 		List<Customer> customers = new ArrayList<Customer>();
 		try
 		{
-			String sql = "Select * from company order by name;";
-			Connection conn = DBConnect.getConnection();			
+			sql = "Select * from company order by name;";
+	
 			PreparedStatement p = conn.prepareStatement(sql);
 			ResultSet rs = p.executeQuery();
 		
@@ -36,17 +41,29 @@ public class CustomerConnect
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			
+			if (prep != null){
+				prep.close();
+			
+			} else if (conn != null){
+				conn.close();
+			}
 		}
 		return customers;
 	}
 	
-	public static List<Customer> getAllPrivateCustomers()
+	public static List<Customer> getAllPrivateCustomers() throws SQLException
 	{
+		String sql = "";
+		Connection conn = DBConnect.getConnection();	
+		PreparedStatement prep = conn.prepareStatement(sql);
+		
 		List<Customer> privateCustomers = new ArrayList<Customer>();
 		try
 		{
-			String sql = "Select * from privatecustomer order by fName;";
-			Connection conn = DBConnect.getConnection();			
+			sql = "Select * from privatecustomer order by fName;";
+		
 			PreparedStatement p = conn.prepareStatement(sql);
 			ResultSet rs = p.executeQuery();
 		
@@ -62,17 +79,31 @@ public class CustomerConnect
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			
+			if (prep != null){
+				prep.close();
+			
+			} else if (conn != null){
+				conn.close();
+			}
 		}
 		return privateCustomers;
-	}
-
-	public void addNewCustomer(PrivateCustomer newPrivateCustomer) throws SQLException{
+		}
+	
+	
 	/**
 	 * This method build and executes the a query that adds a new customer to the database.
 	 * 
 	 * @param PrivateCustomer or Company
 	 * @author Martin
 	 */
+	public void addNewCustomer(PrivateCustomer newPrivateCustomer) throws SQLException{
+	
+		String sql = "";
+		Connection conn = DBConnect.getConnection();	
+		PreparedStatement prep = conn.prepareStatement(sql);
+		
 		try{
 			try{
 				String fName = newPrivateCustomer.getFirstName();
@@ -87,14 +118,12 @@ public class CustomerConnect
 				Calendar birthday = newPrivateCustomer.getBirthdate();
 				
 				int zipCode = zip.getZipCode();
-				String bDate = birthday.toString();
+				java.sql.Date bdate = new Date(birthday.getTimeInMillis());
+				
 				// Can't figure out how to handle this one.
 	
-				String sql = " INSERT INTO customer (fName, lName, email, phoneNo, address, addressNo, zip, country, gender, birthdate)"
+				sql = " INSERT INTO customer (fName, lName, email, phoneNo, street, houseNumer, zip, country_fk, gender, birthdate)"
 				        + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			
-				Connection conn = DBConnect.getConnection();			
-				PreparedStatement prep = conn.prepareStatement(sql);
 
 				prep.setString (1, fName);
 				prep.setString (2, lName);
@@ -105,30 +134,38 @@ public class CustomerConnect
 				prep.setInt (7, zipCode);
 				prep.setInt (8, country);
 				prep.setBoolean(9, gender);
-				prep.setString(10, bDate);
+				prep.setDate(10, bdate);
 
-				prep.executeUpdate();			
+				prep.execute();			
 
 			} catch(Exception e){
-				System.err.println("Informations was not submitted to the database.");
-				System.err.println(e.getMessage());
+				//System.err.println("Informations was not submitted to the database.");
+				System.err.println(e);
 			}
 		} catch (Exception e){
 		} finally {
 			
-			//Closes the connection
-			DBConnect.close();
+			if (prep != null){
+				prep.close();
+			
+			} else if (conn != null){
+				conn.close();
+			}
 		}
 	}
 	
+	
+	/**
+	 * This method build and executes the a query that adds a new customer to the database.
+	 * 
+	 * @param PrivateCustomer or Company
+	 * @author Martin
+	 */
 	public void addNewCustomer(Company newCompany) throws SQLException{
-		//Create database connect object.
-		/**
-		 * This method build and executes the a query that adds a new customer to the database.
-		 * 
-		 * @param PrivateCustomer or Company
-		 * @author Martin
-		 */
+		String sql = "";
+		Connection conn = DBConnect.getConnection();	
+		PreparedStatement prep = conn.prepareStatement(sql);
+
 		try{
 			try{
 
@@ -149,11 +186,10 @@ public class CustomerConnect
 			
 			int zipCode = zip.getZipCode(); // Retrieving the zipcode from the zip object.
 
-			String sql = " INSERT INTO company (cvr, email, name, contactName, phoneNo, faxNo, address, addressNo, zip, country)"
+			sql = " INSERT INTO company (cvr, email, name, contactName, phoneNo, faxNo, steet, houseNumber, zip_fk, country_fk)"
 			        + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			
-			Connection conn = DBConnect.getConnection();			
-			PreparedStatement prep = conn.prepareStatement(sql);
+					
+
 	
 			//Study note.
 			/* Essentially, I could do the following prep.setSomething in a different way.
@@ -182,8 +218,12 @@ public class CustomerConnect
 		} catch (Exception e){
 		} finally {
 			
-			//Closes the connection
-			DBConnect.close();
+			if (prep != null){
+				prep.close();
+			
+			} else if (conn != null){
+				conn.close();
+			}
 		}
 	}
 	

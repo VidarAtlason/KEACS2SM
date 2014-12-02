@@ -1,4 +1,4 @@
-/*DROP DATABASE  sunshineresort;*/
+DROP DATABASE  sunshineresort;
 CREATE DATABASE sunshineresort;
 use sunshineresort;
 
