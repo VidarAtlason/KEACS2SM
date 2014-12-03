@@ -5,35 +5,38 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import model.classes.Company;
 import model.classes.Customer;
+import model.classes.RateByWeek;
 
 public class RateConnect
 {
-	public static int getRate(int weekNo)
+	public static RateByWeek[] getRatesFromDB() throws SQLException
 	{
-		int rate = 0;
-		try
-		{
-			String sql = "Select rate from rate where id = ?;";
-			Connection conn = DBConnect.getConnection();			
-			PreparedStatement p = conn.prepareStatement(sql);
-			p.setInt(1, weekNo);
-			ResultSet rs = p.executeQuery();
+		RateByWeek[] rates = new RateByWeek[52];
+		String sql = "Select * from rate order by id";
+		Connection conn = DBConnect.getConnection();			
+		PreparedStatement p = conn.prepareStatement(sql);
+		ResultSet rs = p.executeQuery();
 		
-			if(rs.next())
-			{
-				rate = rs.getInt("rate");
-				return rate;
-			}
-
-		} catch (SQLException e)
+		int index = 0;
+		while(rs.next() && index < 52)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			int weekNo = rs.getInt("id");
+			int rate = rs.getInt("rate");
+			rates[index] = new RateByWeek(weekNo, rate);
+			index++;
 		}
-		return rate;
+		
+		if(conn != null)
+		{
+			conn.close();
+		}
+		
+		return rates;
 	}
 }

@@ -14,19 +14,18 @@ public class Reservation
 	private boolean isPaid;
 	private double totalPrice;
 	
-	public Reservation(int reservationId, int weekFrom, int weekTo)
+	public Reservation(int weekFrom, int weekTo)
 	{
-		this.reservationId = reservationId;
 		this.weekFrom = weekFrom;
 		this.weekTo = weekTo;
 	}
-	public Reservation(int reservationId, Customer customer, Cottage cottage, Calendar reservationDate, int weekFrom, int weekTo, boolean isPaid)
+	public Reservation(Customer customer, Cottage cottage, int weekFrom, int weekTo, boolean isPaid, double totalPrice)
 	{
-		this(reservationId,weekFrom,weekTo);
+		this(weekFrom,weekTo);
 		this.customer = customer;
 		this.cottage = cottage;
-		this.reservationDate = reservationDate;
 		this.isPaid = isPaid;
+		this.totalPrice = totalPrice;
 	}
 
 	public int getReservationId()
@@ -68,35 +67,4 @@ public class Reservation
 	{
 		return totalPrice;
 	}
-		
-	public double getStandardPrice()
-	{
-		// TODO - implement Reservation.getStandardPrice
-		throw new UnsupportedOperationException();
-	}
-
-	public double calculatePrice()
-	{
-		// TODO - implement Reservation.calculatePrice
-		throw new UnsupportedOperationException();
-	}
-
-	public void sendConfirmationEmail()
-	{
-		// TODO - implement Reservation.sendConfirmationEmail
-		throw new UnsupportedOperationException();
-	}
-
-	public void sendReminderEmail()
-	{
-		// TODO - implement Reservation.sendReminderEmail
-		throw new UnsupportedOperationException();
-	}
-
-	public boolean isTooOld()
-	{
-		// TODO - implement Reservation.isTooOld
-		throw new UnsupportedOperationException();
-	}
-
 }

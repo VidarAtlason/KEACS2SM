@@ -63,6 +63,7 @@ public class ReservationConnect
 	 * @param weekNo int representation of week no (fx. 201416 - week no 16 year 2014)
 	 * @return the reservation for this cottageId that has the latest weekTo value before this weekNo 
 	 * @throws SQLException
+	 * @Deprecated
 	 */
 	public static Reservation getLastReservationBeforeWeek(int cottageId, int weekNo) throws SQLException
 	{
@@ -76,7 +77,7 @@ public class ReservationConnect
 		ResultSet rs = p.executeQuery();
 		if(rs.next())
 		{
-			Reservation r = new Reservation(rs.getInt("id"), rs.getInt("durationFrom"), rs.getInt("durationTo"));
+			Reservation r = new Reservation(rs.getInt("durationFrom"), rs.getInt("durationTo"));
 			if(conn != null)
 			{
 				conn.close();
@@ -97,6 +98,7 @@ public class ReservationConnect
 	 * @param weekNo int representation of week no (fx. 201416 - week no 16 year 2014)
 	 * @return the reservation for this cottageId that has the earliest WeekFrom after this WeekNo
 	 * @throws SQLException
+	 * @Deprecated
 	 */
 	public static Reservation getNextReservationAfterWeek(int cottageId, int weekNo) throws SQLException
 	{
@@ -110,7 +112,7 @@ public class ReservationConnect
 		ResultSet rs = p.executeQuery();
 		if(rs.next())
 		{
-			Reservation r = new Reservation(rs.getInt("id"), rs.getInt("durationFrom"), rs.getInt("durationTo"));
+			Reservation r = new Reservation(rs.getInt("durationFrom"), rs.getInt("durationTo"));
 			if(conn != null)
 			{
 				conn.close();
@@ -123,5 +125,29 @@ public class ReservationConnect
 				conn.close();
 			}
 			return null;		
+	}
+	
+	/**
+	 * @author ai
+	 * @param cottageId
+	 * @param from must be before to
+	 * @param to must be after from
+	 * @return if there is any reservation in between period from and to
+	 */
+	public static boolean foundReservation(int cottageId, int from, int to) throws SQLException
+	{
+		String sql = "select * from reservation where cottage_fk = ? and durationTo >= ? and durationFrom <= ?; ";
+		Connection conn = DBConnect.getConnection();
+		
+		PreparedStatement p = conn.prepareStatement(sql);
+		p.setInt(1, cottageId);
+		p.setInt(2, from);
+		p.setInt(3, to);
+		
+		ResultSet rs = p.executeQuery();
+		if(rs.next())
+			return true;
+		else
+			return false;
 	}
 }

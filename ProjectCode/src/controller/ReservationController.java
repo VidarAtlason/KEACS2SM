@@ -40,7 +40,7 @@ public class ReservationController
 		frame = new CottageWindow();
 		this.cottage = cottage;
 		frame.setTextCottageInfo(cottage);
-		frame.addCbActionListener(listener);
+		frame.addFrameActionListener(listener);
 	}
 	
 	/**
@@ -76,7 +76,7 @@ public class ReservationController
 	public ActionListener listener = new ActionListener()
 	{
 		@Override
-		public void actionPerformed(ActionEvent arg0)
+		public void actionPerformed(ActionEvent e)
 		{
 			// update of selected week/year to make sure that user cannot choose a negative time window
 			int weekFrom = frame.getSelectedWeekFrom(); 
@@ -85,7 +85,7 @@ public class ReservationController
 			int yearTo = frame.getSelectedYearTo();
 			if(yearFrom > yearTo)
 			{
-				frame.setSelectedYearTo(yearFrom - Calendar.getInstance().get(Calendar.YEAR) - 1); 
+				frame.setSelectedYearTo(yearFrom - Calendar.getInstance().get(Calendar.YEAR)); 
 			}
 			if(yearFrom == yearTo)
 			{
@@ -98,23 +98,46 @@ public class ReservationController
 			// check availability during selected duration
 			int durationFrom = convertWeekYearToInt(frame.getSelectedWeekFrom(), frame.getSelectedYearFrom());
 			int durationTo = convertWeekYearToInt(frame.getSelectedWeekTo(), frame.getSelectedYearTo());
-			if(!isAvailable(cottage.getCottageId(), durationFrom) || !isAvailable(cottage.getCottageId(), durationTo))
+			if(!isAvailable(cottage.getCottageId(), durationFrom, durationTo))
 			{
 				JOptionPane.showMessageDialog(null, "This cottage has been reserved for this duration. Please choose a different duration.");
 			}
-			
-			// calculate the price from all parameters and display price in frame
-			double price = calculatePrice(cottage , weekFrom, yearFrom, weekTo, yearTo);
-			frame.setPricelabel("" + price);
-			
-			// get the Customer from selected customer in combobox and get discount for customer and display discount amount in frame
-			Customer selectedCustomer = allCustomers.get(frame.getSelectedCustomer());
-			double discount = getDiscount(selectedCustomer);
-			frame.setDiscountLabel("" + discount);
-			
-			// calculate total price and display in frame
-			frame.setTotalPriceLabel("" + calculateTotalPrice(price, discount));		
-			
+			else
+			{
+				// calculate the price from all parameters and display price in frame
+				double price = 0;
+				try {
+					price = calculatePrice(cottage, frame.getSelectedWeekFrom(), frame.getSelectedYearFrom(), frame.getSelectedWeekTo(), frame.getSelectedYearTo());
+					frame.setPricelabel("" + price);
+				} catch (SQLException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+
+				// get the Customer from selected customer in combobox and get discount for customer and display discount amount in frame
+				Customer selectedCustomer = allCustomers.get(frame.getSelectedCustomer());
+				double discount = getDiscount(selectedCustomer);
+				frame.setDiscountLabel("" + discount);
+				
+				// calculate total price and display in frame
+				double totalPrice = calculateTotalPrice(price, discount);
+				frame.setTotalPriceLabel("" + totalPrice);		
+				
+				// Save function
+				if(e.getSource() == frame.btnSave)
+				{
+					Reservation r = new Reservation(selectedCustomer, cottage, durationFrom, durationTo, frame.isPaidReservation(), totalPrice);
+					try 
+					{
+						ReservationConnect.insertNewReservation(r);
+						JOptionPane.showMessageDialog(null, 
+								"The " + cottage.getCottageName() + " cottage has been reserved by " + selectedCustomer.getCustomerName() + " from week " + frame.getSelectedWeekFrom() + "/" + frame.getSelectedYearFrom() + " to week " + frame.getSelectedWeekTo() + "/" + frame.getSelectedYearTo());
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}			
+			}
 		}
 	};
 	
@@ -126,23 +149,26 @@ public class ReservationController
 	 * @param weekTo
 	 * @param yearTo
 	 * @return price based on standard price for selected cottage's type and the rate on each reserved week. Price don't include customer discount
+	 * @throws SQLException 
 	 */
-	private double calculatePrice(Cottage cottage, int weekFrom, int yearFrom, int weekTo, int yearTo)
+	private double calculatePrice(Cottage cottage, int weekFrom, int yearFrom, int weekTo, int yearTo) throws SQLException
 	{
 		double cottageStandardPrice = CottageConnect.getCottageStandardPrice(cottage.getCottageId()); 
 		double totalPrice = 0;
 		while(yearFrom < yearTo)
 		{
-			for (int i = weekFrom; i < 52; i++)
+			for (int i = weekFrom; i <= 52; i++)
 			{
-				totalPrice += cottageStandardPrice * (RateConnect.getRate(i) / 100);
+				double rate = RateController.getRateByWeekNo(i)/100; //RateConnect.getRate(i) / 100;
+				totalPrice += cottageStandardPrice * rate;
 			}
 			yearFrom++;
 			weekFrom = 1;
 		}
-		for (int i = weekFrom; i < weekTo; i++)
+		for (int i = weekFrom; i <= weekTo; i++)
 		{
-			totalPrice += cottageStandardPrice * (RateConnect.getRate(i) / 100);
+			double rate = RateController.getRateByWeekNo(i)/100;
+			totalPrice += cottageStandardPrice * rate;
 		}
 		return totalPrice;
 	}
@@ -171,21 +197,17 @@ public class ReservationController
 			return 0;
 	}
 	
-	private boolean isAvailable(int cottageId, int weekValue)
+	private boolean isAvailable(int cottageId, int fromWeek, int toWeek)
 	{
-		try {
-			Reservation rBefore = ReservationConnect.getLastReservationBeforeWeek(cottageId, weekValue);
-			Reservation rAfter = ReservationConnect.getNextReservationAfterWeek(cottageId, weekValue);
-			if((rBefore == null && rAfter == null) || (rBefore == null && weekValue < rAfter.getWeekFrom()) || (rBefore.getWeekTo() < weekValue && rAfter == null) || (rBefore.getWeekTo() < weekValue && weekValue < rAfter.getWeekFrom()))
-			{
-				return true;
-			}
-			
+		try 
+		{
+			if(ReservationConnect.foundReservation(cottageId, fromWeek, toWeek))
+				return false;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return false;
+		return true;
 	}
 	
 	/**

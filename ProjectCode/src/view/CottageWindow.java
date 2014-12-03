@@ -31,7 +31,7 @@ public class CottageWindow extends JFrame
 	private JLabel lblDiscount;
 	private JLabel lblTotalPrice;
 	private JButton btnNewCustomer;
-	private JButton btnSave;
+	public JButton btnSave;
 	private JCheckBox chbPaid;
 	
 	public CottageWindow() {
@@ -141,8 +141,7 @@ public class CottageWindow extends JFrame
 		
 		this.setVisible(true);
 	}
-	
-	// method
+
 	/**
 	 * @author ale
 	 * @param cottage
@@ -226,15 +225,20 @@ public class CottageWindow extends JFrame
 		lblTotalPrice.setText(s);
 	}
 	
+	// get isPaid value
+	public boolean isPaidReservation()
+	{
+		return chbPaid.isSelected();
+	}
+	
 	// action listener
-	public void addCbActionListener(ActionListener actionListener) 
+	public void addFrameActionListener(ActionListener actionListener) 
 	{
 		cbWeekFrom.addActionListener(actionListener);
 		cbWeekTo.addActionListener(actionListener);
 		cbYearFrom.addActionListener(actionListener);
 		cbYearTo.addActionListener(actionListener);
 		cbCustomer.addActionListener(actionListener);
+		btnSave.addActionListener(actionListener);
 	}
-	
-
 }

@@ -1,5 +1,9 @@
 package model.classes;
 
+import java.sql.SQLException;
+
+import model.RateConnect;
+
 public class RateByWeek
 {
 
@@ -20,19 +24,4 @@ public class RateByWeek
 	{
 		return this.rate;
 	}
-
-
-	public double calculatePrice(int weekNo, double standardPrice)
-	{
-		// TODO - implement RateByWeek.calculatePrice
-		throw new UnsupportedOperationException();
-	}
-
-
-	public boolean updateRate(int weekNo, int newRate)
-	{
-		// TODO - implement RateByWeek.updateRate
-		throw new UnsupportedOperationException();
-	}
-
 }
