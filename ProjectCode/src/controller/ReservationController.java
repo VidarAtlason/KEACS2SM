@@ -2,6 +2,7 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -17,42 +18,59 @@ import model.classes.Zip;
 import view.CottageWindow;
 import view.CustomerWindow;
 
-public class CottageController
+public class ReservationController
 {
 	private CottageWindow frame;
 	private List<Customer> allCustomers = new ArrayList<Customer>(); 
 	private Object[] customersArray;
 	private Cottage cottage; 
 	
-	public CottageController()
+	public ReservationController()
 	{
 		allCustomers = this.getListCustomers();
 		
 	}
-	public CottageController(Cottage cottage) 
+	public ReservationController(Cottage cottage) 
 	{
 		this();
 		frame = new CottageWindow();
 		this.cottage = cottage;
 		frame.setTextCottageInfo(cottage);
-		frame.addCbWeekFromActionListener(listener);
+		frame.addCbActionListener(listener);
 	}
-	//  methods
+	
+	/**
+	 * @author ai
+	 * @return the combined list of customer including company and private customer to the controller
+	 */
 	public List<Customer> getListCustomers()
 	{
-		allCustomers.addAll(CustomerConnect.getAllCompanies());
-		allCustomers.addAll(CustomerConnect.getAllPrivateCustomers());
+		try
+		{
+			allCustomers.addAll(CustomerConnect.getAllCompanies());
+			allCustomers.addAll(CustomerConnect.getAllPrivateCustomers());
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}		
 		return allCustomers;
 	}
+	
+	/**
+	 * @author ai
+	 * @return convert the customers list of the Controller to an Object array 
+	 */
 	public Object[] getCustomersArray()
 	{
 		customersArray = allCustomers.toArray();
 		return customersArray;
 	}
 	
+	/**
+	 * @author ai
+	 */
 	public ActionListener listener = new ActionListener()
 	{
-		
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
@@ -72,19 +90,33 @@ public class CottageController
 					frame.setSelectedWeekTo(weekFrom - 1);
 				}
 			}
+		
+			// calculate the price from all parameters and display price in frame
+			double price = calculatePrice(cottage , weekFrom, yearFrom, weekTo, yearTo);
+			frame.setPricelabel("" + price);
 			
-			//Customer selectedCustomer = (Customer) customers[frame.getSelectedCustomer()];
-		
-		
-		
-		//calculatePrice(this.cottage , customer, weekFrom, yearFrom, weekTo, yearTo);
-		
+			// get the Customer from selected customer in combobox and get discount for customer and display discount amount in frame
+			Customer selectedCustomer = allCustomers.get(frame.getSelectedCustomer());
+			double discount = getDiscount(selectedCustomer);
+			frame.setDiscountLabel("" + discount);
+			
+			// calculate total price and display in frame
+			frame.setTotalPriceLabel("" + calculateTotalPrice(price, discount));		
+			
 		}
 	};
-
-	private double calculatePrice(Cottage cottage, Customer customer, int weekFrom, int yearFrom, int weekTo, int yearTo)
+	
+	/**
+	 * @author ai
+	 * @param cottage
+	 * @param weekFrom
+	 * @param yearFrom
+	 * @param weekTo
+	 * @param yearTo
+	 * @return price based on standard price for selected cottage's type and the rate on each reserved week. Price don't include customer discount
+	 */
+	private double calculatePrice(Cottage cottage, int weekFrom, int yearFrom, int weekTo, int yearTo)
 	{
-		//int totalWeeks = (yearTo - yearFrom) * 52 + weekTo - weekFrom;
 		double cottageStandardPrice = CottageConnect.getCottageStandardPrice(cottage.getCottageId()); 
 		double totalPrice = 0;
 		while(yearFrom < yearTo)
@@ -101,6 +133,30 @@ public class CottageController
 			totalPrice += cottageStandardPrice * (RateConnect.getRate(i) / 100);
 		}
 		return totalPrice;
+	}
+	
+	/**
+	 * @author ai
+	 * @param price
+	 * @param discount
+	 * @return final total price based on price and discount. Discount is the value presented in percentage, fx. 10 represents 10% discount
+	 */
+	private double calculateTotalPrice(double price, double discount)
+	{
+		return price*(1-discount/100);
+	}
+	
+	/**
+	 * @author ai
+	 * @param customer
+	 * @return 10% discount if customer is company
+	 */
+	private int getDiscount(Customer customer)
+	{
+		if(customer instanceof Company)
+			return 10;
+		else
+			return 0;
 	}
 	
 	private boolean isAvailable(int cottageId, int fromValue, int toValue)

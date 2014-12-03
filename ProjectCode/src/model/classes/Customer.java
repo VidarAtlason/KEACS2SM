@@ -9,6 +9,7 @@ public abstract class Customer
 	protected String houseNumber;
 	protected Zip zip;
 	protected String country;
+	protected boolean isCompany;
 	
 	public Customer(int customerId)
 	{
@@ -19,6 +20,7 @@ public abstract class Customer
 		this.houseNumber = null;
 		this.zip = null;
 		this.country = null;
+		this.isCompany = false;
 	}
 	
 	public Customer(int customerId, String email, String phone, String street, String houseNumber, Zip zip, String country)
@@ -30,6 +32,7 @@ public abstract class Customer
 		this.houseNumber = houseNumber;
 		this.zip = zip;
 		this.country = country;
+		this.isCompany = false;
 	}
 	
 	public int getCustomerId()
@@ -67,6 +70,10 @@ public abstract class Customer
 		return this.country;
 	}
 	
+	public boolean isCompanyCustomer()
+	{
+		return this.isCompany;
+	}
 	public void setCustomerId(int customerId)
 	{
 		this.customerId = customerId;

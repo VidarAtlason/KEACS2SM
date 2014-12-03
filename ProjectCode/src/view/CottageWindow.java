@@ -10,7 +10,7 @@ import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
 
-import controller.CottageController;
+import controller.ReservationController;
 import model.classes.Cottage;
 import model.classes.Customer;
 
@@ -48,7 +48,7 @@ public class CottageWindow extends JFrame
 		lblCottageInformation.setBounds(47, 13, 125, 16);
 		getContentPane().add(lblCottageInformation);
 		
-		cbCustomer = new JComboBox(new CottageController().getCustomersArray());
+		cbCustomer = new JComboBox(new ReservationController().getCustomersArray());
 		cbCustomer.setBounds(124, 143, 170, 22);
 		getContentPane().add(cbCustomer);
 		
@@ -143,6 +143,11 @@ public class CottageWindow extends JFrame
 	}
 	
 	// method
+	/**
+	 * @author ale
+	 * @param cottage
+	 * set information on the frame for selected cottage
+	 */
 	public void setTextCottageInfo(Cottage cottage)
 	{
 		String address = cottage.getStreet() + " " + cottage.getHouseNumber() + ", " + cottage.getZip().getZipCode() + " " + cottage.getZip().getCity();
@@ -222,12 +227,13 @@ public class CottageWindow extends JFrame
 	}
 	
 	// action listener
-	public void addCbWeekFromActionListener(ActionListener actionListener) 
+	public void addCbActionListener(ActionListener actionListener) 
 	{
 		cbWeekFrom.addActionListener(actionListener);
 		cbWeekTo.addActionListener(actionListener);
 		cbYearFrom.addActionListener(actionListener);
 		cbYearTo.addActionListener(actionListener);
+		cbCustomer.addActionListener(actionListener);
 	}
 	
 

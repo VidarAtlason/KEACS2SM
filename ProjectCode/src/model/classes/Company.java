@@ -15,6 +15,7 @@ public class Company extends Customer
 		this.CVR = null;
 		this.fax = null;
 		this.contactPersonName = null;
+		this.isCompany = true;
 		
 	}
 	public Company(int customerId, String email, String phone,String street, String houseNumber, Zip zip,
@@ -25,6 +26,7 @@ public class Company extends Customer
 		this.CVR = CVR;
 		this.fax = fax;
 		this.contactPersonName = contactPersonName;
+		this.isCompany = true;
 	}
 
 	public String getCompanyName()
