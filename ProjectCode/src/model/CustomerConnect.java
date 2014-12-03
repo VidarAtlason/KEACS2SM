@@ -16,6 +16,11 @@ import model.classes.Zip;
 
 public class CustomerConnect
 {
+	/**
+	 * @author ai
+	 * @return all companies from sunshineresort.company table order by name
+	 * @throws SQLException
+	 */
 	public static List<Customer> getAllCompanies() throws SQLException
 	{
 		String sql = "";
@@ -23,36 +28,30 @@ public class CustomerConnect
 		PreparedStatement prep = conn.prepareStatement(sql);	
 		
 		List<Customer> customers = new ArrayList<Customer>();
-		try
-		{
-			sql = "Select * from company order by name;";
-	
-			PreparedStatement p = conn.prepareStatement(sql);
-			ResultSet rs = p.executeQuery();
+		sql = "Select * from company order by name;";
 		
-			while(rs.next())
-			{
-				int customerId = rs.getInt("id");
-				String companyName = rs.getString("name");
-				Customer customer = new Company(customerId, companyName);
-				customers.add(customer);
-			}
-		} catch (SQLException e)
+		PreparedStatement p = conn.prepareStatement(sql);
+		ResultSet rs = p.executeQuery();
+	
+		while(rs.next())
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			
-			if (prep != null){
-				prep.close();
-			
-			} else if (conn != null){
-				conn.close();
-			}
+			int customerId = rs.getInt("id");
+			String companyName = rs.getString("name");
+			Customer customer = new Company(customerId, companyName);
+			customers.add(customer);
+		}
+		if(conn!=null)
+		{
+			conn.close();
 		}
 		return customers;
 	}
 	
+	/**
+	 * @author ai
+	 * @return all companies from sunshineresort.privatecustomer table order by name
+	 * @throws SQLException
+	 */
 	public static List<Customer> getAllPrivateCustomers() throws SQLException
 	{
 		String sql = "";
@@ -60,36 +59,25 @@ public class CustomerConnect
 		PreparedStatement prep = conn.prepareStatement(sql);
 		
 		List<Customer> privateCustomers = new ArrayList<Customer>();
-		try
-		{
-			sql = "Select * from privatecustomer order by fName;";
+		sql = "Select * from privatecustomer order by fName;";
 		
-			PreparedStatement p = conn.prepareStatement(sql);
-			ResultSet rs = p.executeQuery();
-		
-			while(rs.next())
-			{
-				int customerId = rs.getInt("id");
-				String firstName = rs.getString("fName");
-				String lastName = rs.getString("lName");
-				Customer customer = new PrivateCustomer(customerId, firstName, lastName);
-				privateCustomers.add(customer);
-			}
-		} catch (SQLException e)
+		PreparedStatement p = conn.prepareStatement(sql);
+		ResultSet rs = p.executeQuery();
+	
+		while(rs.next())
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			
-			if (prep != null){
-				prep.close();
-			
-			} else if (conn != null){
-				conn.close();
-			}
+			int customerId = rs.getInt("id");
+			String firstName = rs.getString("fName");
+			String lastName = rs.getString("lName");
+			Customer customer = new PrivateCustomer(customerId, firstName, lastName);
+			privateCustomers.add(customer);
+		}
+		if (conn != null)
+		{
+			conn.close();
 		}
 		return privateCustomers;
-		}
+	}
 	
 	
 	/**

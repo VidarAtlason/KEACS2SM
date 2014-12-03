@@ -293,18 +293,18 @@ public class CustomerWindow extends JFrame {
 	public void addButtonActionListener(ActionListener actionListener) {
 		btnSave.addActionListener(actionListener);
 	}
-//	public Company getCompany(){
-//		return new Company(0, txtEmail.getText(), txtPhoneNumber.getText(),
-//				txtStreetName.getText(),txtStreetNumber.getText(), new Zip(txtZip.getText(),"Norrebro"),
-//				txtCountryCode.getText(), txtCompanyName.getText(), txtCVR.getText(),
-//				txtFaxNo.getText(),txtContactPersonName.getText());
-//	}
-//	public Customer getCustomer(){
-//		Calendar c = Calendar.getInstance();
-//		c.set(1998, Calendar.MARCH, 15);
-//		return new PrivateCustomer(0,txtEmail.getText(), txtPhoneNumber.getText(),
-//				txtStreetName.getText(),txtStreetNumber.getText(), new Zip(txtZip.getText(),"Norrebro"),
-//				txtCountryCode.getText(),txtFirstName.getText(),txtLastName.getText(),(cbGender.getSelectedIndex()==1)?true:false,
-//				c);
-//	}
+	public Company getCompany(){
+		return new Company(0, txtEmail.getText(), txtPhoneNumber.getText(),
+				txtStreetName.getText(),txtStreetNumber.getText(), new Zip(Integer.parseInt(txtZip.getText()),"Norrebro"),
+				txtCountryCode.getText(), txtCompanyName.getText(), txtCVR.getText(),
+				txtFaxNo.getText(),txtContactPersonName.getText());
+	}
+	public Customer getCustomer(){
+		Calendar c = Calendar.getInstance();
+		c.set(1998, Calendar.MARCH, 15);
+		return new PrivateCustomer(0,txtEmail.getText(), txtPhoneNumber.getText(),
+				txtStreetName.getText(),txtStreetNumber.getText(), new Zip(Integer.parseInt(txtZip.getText()),"Norrebro"),
+				txtCountryCode.getText(),txtFirstName.getText(),txtLastName.getText(),(cbGender.getSelectedIndex()==1)?true:false,
+				c);
+	}
 }
