@@ -18,12 +18,12 @@ public class CustomerController {
 	        public void actionPerformed(ActionEvent evt) {
 	        	if (frame.isCompany())
 	        	{
-	        		Company newCompany = frame.getCompany();
+	        		//Company newCompany = frame.getCompany();
 	        		//Martins addCompany method from CompanyDB
 	        		
 	        	}
 	        	else {
-	        		Customer newCustomer = frame.getCustomer();
+	        		//Customer newCustomer = frame.getCustomer();
 	        	}
 	        	showFrame(false);
 	        }
