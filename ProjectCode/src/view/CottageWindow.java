@@ -176,12 +176,12 @@ public class CottageWindow extends JFrame
 	
 	public int getSelectedYearFrom()
 	{
-		return cbYearFrom.getSelectedIndex() + 1 + Calendar.getInstance().get(Calendar.YEAR);
+		return cbYearFrom.getSelectedIndex() + Calendar.getInstance().get(Calendar.YEAR);
 	}
 	
 	public int getSelectedYearTo()
 	{
-		return cbYearTo.getSelectedIndex() + 1 + Calendar.getInstance().get(Calendar.YEAR);
+		return cbYearTo.getSelectedIndex() + Calendar.getInstance().get(Calendar.YEAR);
 	}
 	
 	public int getSelectedCustomer()

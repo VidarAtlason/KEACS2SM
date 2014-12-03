@@ -7,13 +7,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import model.CottageConnect;
 import model.CustomerConnect;
 import model.RateConnect;
+import model.ReservationConnect;
 import model.classes.Company;
 import model.classes.Cottage;
 import model.classes.CottageType;
 import model.classes.Customer;
+import model.classes.Reservation;
 import model.classes.Zip;
 import view.CottageWindow;
 import view.CustomerWindow;
@@ -90,7 +94,15 @@ public class ReservationController
 					frame.setSelectedWeekTo(weekFrom - 1);
 				}
 			}
-		
+			
+			// check availability during selected duration
+			int durationFrom = convertWeekYearToInt(frame.getSelectedWeekFrom(), frame.getSelectedYearFrom());
+			int durationTo = convertWeekYearToInt(frame.getSelectedWeekTo(), frame.getSelectedYearTo());
+			if(!isAvailable(cottage.getCottageId(), durationFrom) || !isAvailable(cottage.getCottageId(), durationTo))
+			{
+				JOptionPane.showMessageDialog(null, "This cottage has been reserved for this duration. Please choose a different duration.");
+			}
+			
 			// calculate the price from all parameters and display price in frame
 			double price = calculatePrice(cottage , weekFrom, yearFrom, weekTo, yearTo);
 			frame.setPricelabel("" + price);
@@ -159,8 +171,31 @@ public class ReservationController
 			return 0;
 	}
 	
-	private boolean isAvailable(int cottageId, int fromValue, int toValue)
+	private boolean isAvailable(int cottageId, int weekValue)
 	{
-		return true; //any smart way to compare week+year w/o converting?
+		try {
+			Reservation rBefore = ReservationConnect.getLastReservationBeforeWeek(cottageId, weekValue);
+			Reservation rAfter = ReservationConnect.getNextReservationAfterWeek(cottageId, weekValue);
+			if((rBefore == null && rAfter == null) || (rBefore == null && weekValue < rAfter.getWeekFrom()) || (rBefore.getWeekTo() < weekValue && rAfter == null) || (rBefore.getWeekTo() < weekValue && weekValue < rAfter.getWeekFrom()))
+			{
+				return true;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	/**
+	 * @author ai
+	 * @param weekNo
+	 * @param yearNo
+	 * @return an integer representation of week and year; for example week 12 year 2014 will be converted to 201412. See project document for further explanation
+	 */
+	private int convertWeekYearToInt(int weekNo, int yearNo)
+	{
+		return (yearNo * 100 + weekNo);
 	}
 }

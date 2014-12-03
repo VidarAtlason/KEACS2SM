@@ -14,14 +14,18 @@ public class Reservation
 	private boolean isPaid;
 	private double totalPrice;
 	
-	public Reservation(int reservationId, Customer customer, Cottage cottage, Calendar reservationDate, int weekFrom, int yearFrom, int weekTo, int yearTo, boolean isPaid)
+	public Reservation(int reservationId, int weekFrom, int weekTo)
 	{
 		this.reservationId = reservationId;
+		this.weekFrom = weekFrom;
+		this.weekTo = weekTo;
+	}
+	public Reservation(int reservationId, Customer customer, Cottage cottage, Calendar reservationDate, int weekFrom, int weekTo, boolean isPaid)
+	{
+		this(reservationId,weekFrom,weekTo);
 		this.customer = customer;
 		this.cottage = cottage;
 		this.reservationDate = reservationDate;
-		this.weekFrom = convertWeekYearToInt(weekFrom, yearFrom);
-		this.weekTo = convertWeekYearToInt(weekTo, yearTo);
 		this.isPaid = isPaid;
 	}
 
@@ -64,18 +68,7 @@ public class Reservation
 	{
 		return totalPrice;
 	}
-	
-	/**
-	 * @author ai
-	 * @param weekNo
-	 * @param yearNo
-	 * @return and integer representation of week and year; for example week 12 year 2014 will be converted to 201412. See project document for further explanation
-	 */
-	public int convertWeekYearToInt(int weekNo, int yearNo)
-	{
-		return (yearNo * 100 + weekNo);
-	}
-	
+		
 	public double getStandardPrice()
 	{
 		// TODO - implement Reservation.getStandardPrice

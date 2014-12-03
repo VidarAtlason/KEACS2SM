@@ -3,6 +3,7 @@ package model;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Calendar;
@@ -18,6 +19,11 @@ import model.classes.Reservation;
  */
 public class ReservationConnect
 {
+	/**
+	 * @author ai
+	 * @param Reservation r
+	 * @throws SQLException
+	 */
 	public static void insertNewReservation(Reservation r) throws SQLException
 	{
 		String sql = "INSERT INTO reservation(`reserveDate`, `durationFrom`, `durationTo`, `paid`, `price`, `privatecustomer_fk`, `company_fk`, `cottage_fk`) VALUES (?,?,?,?,?,?,?,?);";
@@ -49,6 +55,73 @@ public class ReservationConnect
 		{
 			conn.close();
 		}
-
+	}
+	
+	/**
+	 * 
+	 * @param cottageId
+	 * @param weekNo int representation of week no (fx. 201416 - week no 16 year 2014)
+	 * @return the reservation for this cottageId that has the latest weekTo value before this weekNo 
+	 * @throws SQLException
+	 */
+	public static Reservation getLastReservationBeforeWeek(int cottageId, int weekNo) throws SQLException
+	{
+		String sql = "SELECT * FROM reservation where cottage_fk = ? and durationTo <= ? order by durationTo desc limit 1";
+		Connection conn = DBConnect.getConnection();
+		
+		PreparedStatement p = conn.prepareStatement(sql);
+		p.setInt(1, cottageId);
+		p.setInt(2, weekNo);
+		
+		ResultSet rs = p.executeQuery();
+		if(rs.next())
+		{
+			Reservation r = new Reservation(rs.getInt("id"), rs.getInt("durationFrom"), rs.getInt("durationTo"));
+			if(conn != null)
+			{
+				conn.close();
+			}
+			return r;
+		}
+		else
+			if(conn != null)
+			{
+				conn.close();
+			}
+			return null;		
+	}
+	
+	/**
+	 * 
+	 * @param cottageId
+	 * @param weekNo int representation of week no (fx. 201416 - week no 16 year 2014)
+	 * @return the reservation for this cottageId that has the earliest WeekFrom after this WeekNo
+	 * @throws SQLException
+	 */
+	public static Reservation getNextReservationAfterWeek(int cottageId, int weekNo) throws SQLException
+	{
+		String sql = "SELECT * FROM reservation where cottage_fk = ? and durationFrom >= ? order by durationFrom limit 1";
+		Connection conn = DBConnect.getConnection();
+		
+		PreparedStatement p = conn.prepareStatement(sql);
+		p.setInt(1, cottageId);
+		p.setInt(2, weekNo);
+		
+		ResultSet rs = p.executeQuery();
+		if(rs.next())
+		{
+			Reservation r = new Reservation(rs.getInt("id"), rs.getInt("durationFrom"), rs.getInt("durationTo"));
+			if(conn != null)
+			{
+				conn.close();
+			}
+			return r;
+		}
+		else
+			if(conn != null)
+			{
+				conn.close();
+			}
+			return null;		
 	}
 }
