@@ -16,6 +16,11 @@ public class Reservation
 	private boolean isPaid;
 	private double totalPrice;
 	
+	public Reservation(int reservationId, int fromWeek, int toWeek)
+	{
+		
+	}
+	
 	public Reservation(int reservationId, Customer customer, Cottage cottage, Calendar reservationDate, int weekFrom, int yearFrom, int weekTo, int yearTo, boolean isPaid)
 	{
 		this.reservationId = reservationId;

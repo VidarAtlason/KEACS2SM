@@ -3,6 +3,7 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import model.CottageConnect;
@@ -26,6 +27,7 @@ public class CottageController
 	public CottageController()
 	{
 		allCustomers = this.getListCustomers();
+		
 	}
 	public CottageController(Cottage cottage) 
 	{
@@ -33,6 +35,7 @@ public class CottageController
 		frame = new CottageWindow();
 		this.cottage = cottage;
 		frame.setTextCottageInfo(cottage);
+		frame.addCbWeekFromActionListener(listener);
 	}
 	//  methods
 	public List<Customer> getListCustomers()
@@ -47,29 +50,37 @@ public class CottageController
 		return customersArray;
 	}
 	
-	public void cbOnSelectedItem(ActionEvent e)
+	public ActionListener listener = new ActionListener()
 	{
-		//Customer selectedCustomer = (Customer) customers[frame.getSelectedCustomer()];
-		int weekFrom = frame.getSelectedWeekFrom(); 
-		int weekTo = frame.getSelectedWeekTo();
-		int yearFrom = frame.getSelectedYearFrom();
-		int yearTo = frame.getSelectedYearTo();
-		if(yearFrom > yearTo)
+		
+		@Override
+		public void actionPerformed(ActionEvent arg0)
 		{
-			frame.setSelectedYearTo(yearFrom);
-		}
-		if(yearFrom == yearTo)
-		{
-			if(weekFrom > weekTo)
+			// update of selected week/year to make sure that user cannot choose a negative time window
+			int weekFrom = frame.getSelectedWeekFrom(); 
+			int weekTo = frame.getSelectedWeekTo();
+			int yearFrom = frame.getSelectedYearFrom();
+			int yearTo = frame.getSelectedYearTo();
+			if(yearFrom > yearTo)
 			{
-				frame.setSelectedWeekTo(weekFrom);
+				frame.setSelectedYearTo(yearFrom - Calendar.getInstance().get(Calendar.YEAR) - 1); 
 			}
-		}
+			if(yearFrom == yearTo)
+			{
+				if(weekFrom > weekTo)
+				{
+					frame.setSelectedWeekTo(weekFrom - 1);
+				}
+			}
+			
+			//Customer selectedCustomer = (Customer) customers[frame.getSelectedCustomer()];
+		
 		
 		
 		//calculatePrice(this.cottage , customer, weekFrom, yearFrom, weekTo, yearTo);
 		
-	}
+		}
+	};
 
 	private double calculatePrice(Cottage cottage, Customer customer, int weekFrom, int yearFrom, int weekTo, int yearTo)
 	{
@@ -90,5 +101,10 @@ public class CottageController
 			totalPrice += cottageStandardPrice * (RateConnect.getRate(i) / 100);
 		}
 		return totalPrice;
+	}
+	
+	private boolean isAvailable(int cottageId, int fromValue, int toValue)
+	{
+		return true; //any smart way to compare week+year w/o converting?
 	}
 }

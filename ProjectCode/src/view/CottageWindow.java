@@ -25,8 +25,6 @@ public class CottageWindow extends JFrame
 	private JComboBox cbWeekTo;
 	JComboBox cbYearFrom;
 	JComboBox cbYearTo;
-//	private JLabel lblDateFrom;
-//	private JLabel lblDateTo;
 	private JTextArea txtaCottageInfo;
 	private JComboBox cbCustomer;
 	private JLabel lblPrice;
@@ -65,7 +63,7 @@ public class CottageWindow extends JFrame
 			weekNo[i] = "" + (i + 1);
 		}
 		
-		// Add list of years to combobox
+		// Add list of years to combobox - 
 		String [] yearNo = new String[10];
 		for (int i = 0; i < yearNo.length; i++)
 		{
@@ -102,15 +100,7 @@ public class CottageWindow extends JFrame
 		cbYearTo = new JComboBox(yearNo);
 		cbYearTo.setBounds(281, 221, 56, 22);
 		getContentPane().add(cbYearTo);
-		
-//		lblDateFrom = new JLabel("10/10/1010");
-//		lblDateFrom.setBounds(109, 214, 71, 16);
-//		getContentPane().add(lblDateFrom);
-		
-//		lblDateTo = new JLabel("10/10/1010");
-//		lblDateTo.setBounds(266, 214, 71, 16);
-//		getContentPane().add(lblDateTo);
-		
+
 		JLabel lblPriceStatic = new JLabel("Price:");
 		lblPriceStatic.setBounds(45, 263, 71, 16);
 		getContentPane().add(lblPriceStatic);
@@ -235,6 +225,10 @@ public class CottageWindow extends JFrame
 	public void addCbWeekFromActionListener(ActionListener actionListener) 
 	{
 		cbWeekFrom.addActionListener(actionListener);
+		cbWeekTo.addActionListener(actionListener);
+		cbYearFrom.addActionListener(actionListener);
+		cbYearTo.addActionListener(actionListener);
 	}
+	
 
 }

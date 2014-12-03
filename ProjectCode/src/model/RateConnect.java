@@ -28,6 +28,7 @@ public class RateConnect
 				rate = rs.getInt("rate");
 				return rate;
 			}
+
 		} catch (SQLException e)
 		{
 			// TODO Auto-generated catch block

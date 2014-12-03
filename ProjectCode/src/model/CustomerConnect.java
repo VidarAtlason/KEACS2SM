@@ -117,7 +117,7 @@ public class CustomerConnect
 		} finally {
 			
 			//Closes the connection
-			DBConnect.close();
+			//DBConnect.close();
 		}
 	}
 	
@@ -183,7 +183,8 @@ public class CustomerConnect
 		} finally {
 			
 			//Closes the connection
-			DBConnect.close();
+			//DBConnect.close();
+
 		}
 	}
 	
