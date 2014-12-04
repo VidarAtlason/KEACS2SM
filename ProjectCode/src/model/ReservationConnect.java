@@ -36,7 +36,7 @@ public class ReservationConnect
 		p.setBoolean(4, r.isPaidReservation());
 		p.setDouble(5, r.getTotalPrice());
 
-		if(r.getCustomer().isCompany())
+		if(r.getCustomer().isCompanyCustomer())
 		{
 			p.setNull(6, java.sql.Types.NULL);
 			p.setInt(7, r.getCustomer().getCustomerId());
@@ -55,76 +55,6 @@ public class ReservationConnect
 		{
 			conn.close();
 		}
-	}
-	
-	/**
-	 * 
-	 * @param cottageId
-	 * @param weekNo int representation of week no (fx. 201416 - week no 16 year 2014)
-	 * @return the reservation for this cottageId that has the latest weekTo value before this weekNo 
-	 * @throws SQLException
-	 * @Deprecated
-	 */
-	public static Reservation getLastReservationBeforeWeek(int cottageId, int weekNo) throws SQLException
-	{
-		String sql = "SELECT * FROM reservation where cottage_fk = ? and durationTo <= ? order by durationTo desc limit 1";
-		Connection conn = DBConnect.getConnection();
-		
-		PreparedStatement p = conn.prepareStatement(sql);
-		p.setInt(1, cottageId);
-		p.setInt(2, weekNo);
-		
-		ResultSet rs = p.executeQuery();
-		if(rs.next())
-		{
-			Reservation r = new Reservation(rs.getInt("durationFrom"), rs.getInt("durationTo"));
-			if(conn != null)
-			{
-				conn.close();
-			}
-			return r;
-		}
-		else
-			if(conn != null)
-			{
-				conn.close();
-			}
-			return null;		
-	}
-	
-	/**
-	 * 
-	 * @param cottageId
-	 * @param weekNo int representation of week no (fx. 201416 - week no 16 year 2014)
-	 * @return the reservation for this cottageId that has the earliest WeekFrom after this WeekNo
-	 * @throws SQLException
-	 * @Deprecated
-	 */
-	public static Reservation getNextReservationAfterWeek(int cottageId, int weekNo) throws SQLException
-	{
-		String sql = "SELECT * FROM reservation where cottage_fk = ? and durationFrom >= ? order by durationFrom limit 1";
-		Connection conn = DBConnect.getConnection();
-		
-		PreparedStatement p = conn.prepareStatement(sql);
-		p.setInt(1, cottageId);
-		p.setInt(2, weekNo);
-		
-		ResultSet rs = p.executeQuery();
-		if(rs.next())
-		{
-			Reservation r = new Reservation(rs.getInt("durationFrom"), rs.getInt("durationTo"));
-			if(conn != null)
-			{
-				conn.close();
-			}
-			return r;
-		}
-		else
-			if(conn != null)
-			{
-				conn.close();
-			}
-			return null;		
 	}
 	
 	/**

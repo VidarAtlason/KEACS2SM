@@ -1,6 +1,9 @@
 package model.classes;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+
+import model.ReservationConnect;
 
 public class Cottage
 {
@@ -52,10 +55,18 @@ public class Cottage
 		return zip;
 	}
 	
-	public boolean isAvailable(int weekFrom, int yearFrom)
+	/**
+	 * @author ai
+	 * @param weekFrom of the intended reservation
+	 * @param weekTo of the intended reservation
+	 * @return whether this cottage is available during the intended period
+	 */
+	public boolean isAvailable(int weekFrom, int weekTo) throws SQLException
 	{
-		// TODO - implement Cottage.isAvailable
-		throw new UnsupportedOperationException();
+		if(ReservationConnect.foundReservation(cottageId, weekFrom, weekTo))
+			return false;
+		else 
+			return true;
 	}
 
 }

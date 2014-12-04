@@ -68,10 +68,4 @@ public class Company extends Customer
 	{
 		this.contactPersonName = contactPersonName;
 	}
-	
-	public double getDiscountRate()
-	{
-		return 0.1; // company gets a 10% discount
-	}
-
 }

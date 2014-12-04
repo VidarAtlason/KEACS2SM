@@ -7,19 +7,18 @@ import model.classes.RateByWeek;
 
 public class RateController 
 {
-	public static double getRateByWeekNo(int weekNo)
+	/**
+	 * @author ai
+	 * @param weekNo
+	 * @return rate for input weekNo
+	 */
+	public static double getRateByWeekNo(int weekNo) throws SQLException
 	{
-		try 
+		RateByWeek[] allRates = RateConnect.getRatesFromDB();
+		for (int i = 0; i < allRates.length; i++) 
 		{
-			RateByWeek[] allRates = RateConnect.getRatesFromDB();
-			for (int i = 0; i < allRates.length; i++) 
-			{
-				if(allRates[i].getWeekNo() == weekNo)
-					return allRates[i].getRate();
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if(allRates[i].getWeekNo() == weekNo)
+				return allRates[i].getRate();
 		}
 		return 0;
 	}

@@ -12,26 +12,19 @@ import model.classes.Customer;
 
 public class CottageConnect
 {
-	public static double getCottageStandardPrice(int cottageId)
+	public static double getCottageStandardPrice(int cottageId) throws SQLException
 	{
 		double price = 0;
-		try
+		String sql = "select price from cottage join cottagetype on cottage.cottagetype_fk = cottagetype.id where cottage.id = ?;";
+		Connection conn = DBConnect.getConnection();			
+		PreparedStatement p = conn.prepareStatement(sql);
+		p.setInt(1, cottageId);
+		ResultSet rs = p.executeQuery();
+	
+		if(rs.next())
 		{
-			String sql = "select price from cottage join cottagetype on cottage.cottagetype_fk = cottagetype.id where cottage.id = ?;";
-			Connection conn = DBConnect.getConnection();			
-			PreparedStatement p = conn.prepareStatement(sql);
-			p.setInt(1, cottageId);
-			ResultSet rs = p.executeQuery();
-		
-			if(rs.next())
-			{
-				price = rs.getDouble("price");
-				return price;
-			}
-		} catch (SQLException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			price = rs.getDouble("price");
+			return price;
 		}
 		return price;
 	}

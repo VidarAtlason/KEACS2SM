@@ -70,10 +70,6 @@ public abstract class Customer
 		return this.country;
 	}
 	
-	public boolean isCompanyCustomer()
-	{
-		return this.isCompany;
-	}
 	public void setCustomerId(int customerId)
 	{
 		this.customerId = customerId;
@@ -124,7 +120,7 @@ public abstract class Customer
 		}
 	}
 	
-	public boolean isCompany()
+	public boolean isCompanyCustomer()
 	{
 		return (this instanceof Company);
 	}
@@ -132,5 +128,18 @@ public abstract class Customer
 	public String toString()
 	{
 		return this.getCustomerName();
+	}
+	
+	/**
+	 * @author ai
+	 * @param customer
+	 * @return 10% discount if customer is company
+	 */
+	public double getDiscount()
+	{
+		if(this.isCompanyCustomer())
+			return 10;
+		else 
+			return 0;
 	}
 }
