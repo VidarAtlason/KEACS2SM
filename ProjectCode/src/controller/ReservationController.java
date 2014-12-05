@@ -9,18 +9,12 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import model.CottageConnect;
 import model.CustomerConnect;
-import model.RateConnect;
 import model.ReservationConnect;
-import model.classes.Company;
 import model.classes.Cottage;
-import model.classes.CottageType;
 import model.classes.Customer;
 import model.classes.Reservation;
-import model.classes.Zip;
 import view.CottageWindow;
-import view.CustomerWindow;
 
 public class ReservationController
 {
@@ -28,6 +22,7 @@ public class ReservationController
 	private List<Customer> allCustomers = new ArrayList<Customer>(); 
 	private Object[] customersArray;
 	private Cottage cottage; 
+	private Object[][] allReservations;
 	
 	public ReservationController()
 	{
@@ -41,6 +36,12 @@ public class ReservationController
 		this.cottage = cottage;
 		frame.setTextCottageInfo(cottage);
 		frame.addFrameActionListener(listener);
+	}
+	
+	public Object[][] getAllReservationsObject()
+	{
+		this.allReservations = Reservation.convertArrayListToObject(this.getAllReservations());
+		return this.allReservations;
 	}
 	
 	/**
@@ -58,6 +59,20 @@ public class ReservationController
 			e.printStackTrace();
 		}		
 		return allCustomers;
+	}
+	
+	public ArrayList<Reservation> getAllReservations()
+	{
+		ArrayList<Reservation> reservations = new ArrayList<Reservation>();
+		try 
+		{
+			reservations = ReservationConnect.getAllReservation();
+		} catch (SQLException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return reservations;
 	}
 	
 	/**
@@ -78,71 +93,79 @@ public class ReservationController
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			// update of selected week/year to make sure that user cannot choose a negative time window
-			int weekFrom = frame.getSelectedWeekFrom(); 
-			int weekTo = frame.getSelectedWeekTo();
-			int yearFrom = frame.getSelectedYearFrom();
-			int yearTo = frame.getSelectedYearTo();
-			if(yearFrom > yearTo)
+			// Add customer button
+			if(e.getSource() == frame.btnNewCustomer)
 			{
-				frame.setSelectedYearTo(yearFrom - Calendar.getInstance().get(Calendar.YEAR)); 
-			}
-			if(yearFrom == yearTo)
-			{
-				if(weekFrom > weekTo)
-				{
-					frame.setSelectedWeekTo(weekFrom - 1);
-				}
+				new CustomerController();
 			}
 			
-			// check availability during selected duration
-			int durationFrom = convertWeekYearToInt(frame.getSelectedWeekFrom(), frame.getSelectedYearFrom());
-			int durationTo = convertWeekYearToInt(frame.getSelectedWeekTo(), frame.getSelectedYearTo());
-			Reservation newReservation = new Reservation(durationFrom, durationTo);
-			newReservation.setCottage(cottage);
-			newReservation.setIsPaid(frame.isPaidReservation());
-			try 
+			else
 			{
-				if(!cottage.isAvailable(durationFrom, durationTo))
+				// update of selected week/year to make sure that user cannot choose a negative time window
+				int weekFrom = frame.getSelectedWeekFrom(); 
+				int weekTo = frame.getSelectedWeekTo();
+				int yearFrom = frame.getSelectedYearFrom();
+				int yearTo = frame.getSelectedYearTo();
+				if(yearFrom > yearTo)
 				{
-					JOptionPane.showMessageDialog(null, "This cottage has been reserved for this duration. Please choose a different duration.");
+					frame.setSelectedYearTo(yearFrom - Calendar.getInstance().get(Calendar.YEAR)); 
 				}
-				else
+				if(yearFrom == yearTo)
 				{
-					// calculate the price from all parameters and display price in frame
-					double price = 0;
-					price = newReservation.calculatePrice();
-					frame.setPricelabel("" + price);
-
-					// get the Customer from selected customer in combobox and get discount for customer and display discount amount in frame
-					Customer selectedCustomer = allCustomers.get(frame.getSelectedCustomer());
-					newReservation.setCustomer(selectedCustomer);
-					double discount = selectedCustomer.getDiscount();
-					frame.setDiscountLabel("" + discount);
-					
-					// calculate total price and display in frame
-					newReservation.calculateTotalPrice();
-					frame.setTotalPriceLabel("" + newReservation.getTotalPrice());		
-					
-					// Save button
-					if(e.getSource() == frame.btnSave)
+					if(weekFrom > weekTo)
 					{
-						try 
-						{
-							ReservationConnect.insertNewReservation(newReservation);
-							JOptionPane.showMessageDialog(null, 
-									"The " + newReservation.getCottage().getCottageName() + " has been reserved by " + newReservation.getCustomer().getCustomerName() + " from week " + frame.getSelectedWeekFrom() + "/" + frame.getSelectedYearFrom() + " to week " + frame.getSelectedWeekTo() + "/" + frame.getSelectedYearTo());
-						} catch (SQLException e1) 
-						{
-							e1.printStackTrace();
-						}
-					}			
+						frame.setSelectedWeekTo(weekFrom - 1);
+					}
 				}
-			} catch (Exception e2) 
-			{
-				e2.printStackTrace();
-			}
-			
+				
+				// check availability during selected duration
+				int durationFrom = convertWeekYearToInt(frame.getSelectedWeekFrom(), frame.getSelectedYearFrom());
+				int durationTo = convertWeekYearToInt(frame.getSelectedWeekTo(), frame.getSelectedYearTo());
+				Reservation newReservation = new Reservation(durationFrom, durationTo);
+				newReservation.setCottage(cottage);
+				newReservation.setIsPaid(frame.isPaidReservation());
+				try 
+				{
+					if(!cottage.isAvailable(durationFrom, durationTo))
+					{
+						JOptionPane.showMessageDialog(null, "This cottage has been reserved for this duration. Please choose a different duration.");
+					}
+					else
+					{
+						// calculate the price from all parameters and display price in frame
+						double price = 0;
+						price = newReservation.calculatePrice();
+						frame.setPricelabel("" + price);
+
+						// get the Customer from selected customer in combobox and get discount for customer and display discount amount in frame
+						Customer selectedCustomer = allCustomers.get(frame.getSelectedCustomer());
+						newReservation.setCustomer(selectedCustomer);
+						double discount = selectedCustomer.getDiscount();
+						frame.setDiscountLabel("" + discount);
+						
+						// calculate total price and display in frame
+						newReservation.calculateTotalPrice();
+						frame.setTotalPriceLabel("" + newReservation.getTotalPrice());		
+						
+						// Save button
+						if(e.getSource() == frame.btnSave)
+						{
+							try 
+							{
+								ReservationConnect.insertNewReservation(newReservation);
+								JOptionPane.showMessageDialog(null, 
+										"The " + newReservation.getCottage().getCottageName() + " has been reserved by " + newReservation.getCustomer().getCustomerName() + " from week " + frame.getSelectedWeekFrom() + "/" + frame.getSelectedYearFrom() + " to week " + frame.getSelectedWeekTo() + "/" + frame.getSelectedYearTo());
+							} catch (SQLException e1) 
+							{
+								e1.printStackTrace();
+							}
+						}									
+					}
+				} catch (Exception e2) 
+				{
+					e2.printStackTrace();
+				}
+			}		
 		}
 	};
 	

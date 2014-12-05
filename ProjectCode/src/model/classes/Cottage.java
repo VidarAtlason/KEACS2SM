@@ -1,8 +1,6 @@
 package model.classes;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-
 import model.ReservationConnect;
 
 public class Cottage
@@ -53,6 +51,11 @@ public class Cottage
 	public Zip getZip()
 	{
 		return zip;
+	}
+	
+	public void setCottageName(String cottageName) 
+	{
+		this.cottageName = cottageName;
 	}
 	
 	/**

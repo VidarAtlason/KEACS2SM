@@ -30,7 +30,7 @@ public class CottageWindow extends JFrame
 	private JLabel lblPrice;
 	private JLabel lblDiscount;
 	private JLabel lblTotalPrice;
-	private JButton btnNewCustomer;
+	public JButton btnNewCustomer;
 	public JButton btnSave;
 	private JCheckBox chbPaid;
 	
@@ -234,11 +234,12 @@ public class CottageWindow extends JFrame
 	// action listener
 	public void addFrameActionListener(ActionListener actionListener) 
 	{
+		btnNewCustomer.addActionListener(actionListener);
 		cbWeekFrom.addActionListener(actionListener);
 		cbWeekTo.addActionListener(actionListener);
 		cbYearFrom.addActionListener(actionListener);
 		cbYearTo.addActionListener(actionListener);
 		cbCustomer.addActionListener(actionListener);
-		btnSave.addActionListener(actionListener);
+		btnSave.addActionListener(actionListener);		
 	}
 }

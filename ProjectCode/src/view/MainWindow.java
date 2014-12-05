@@ -8,18 +8,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import java.awt.FlowLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.BoxLayout;
-
 import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.CardLayout;
-//import com.jgoodies.forms.layout.FormLayout;
-//import com.jgoodies.forms.layout.ColumnSpec;
-//import com.jgoodies.forms.layout.RowSpec;
-//import net.miginfocom.swing.MigLayout;
-import javax.swing.SwingConstants;
 import javax.swing.ListSelectionModel;
 
 

@@ -5,11 +5,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 
-import model.classes.Cottage;
-import model.classes.Customer;
 import model.classes.Reservation;
 
 /**
@@ -80,4 +78,49 @@ public class ReservationConnect
 		else
 			return false;
 	}
+	
+	public static ArrayList<Reservation> getAllReservation() throws SQLException
+	{
+		String sql = "CALL GetAllReservations;";
+		Connection conn = DBConnect.getConnection();
+		PreparedStatement p = conn.prepareStatement(sql);
+		ResultSet rs = p.executeQuery();
+		ArrayList<Reservation> reservations = new ArrayList<Reservation>();
+		while(rs.next())
+		{
+			int id = rs.getInt("id");
+			Date reservationDate = rs.getDate("reserveDate");
+			String cottageName = rs.getString("cottageName");
+			double price = rs.getDouble("price");
+			boolean isPaid = rs.getBoolean("paid");
+			int weekFrom = rs.getInt("durationFrom");
+			int weekTo = rs.getInt("durationTo");
+			int shortYearFrom = weekFrom/100;
+			int shortWeekFrom = weekFrom - (shortYearFrom * 100);
+			int shortYearTo = weekTo/100;
+			int shortWeekTo = weekTo - (shortYearTo * 100);
+			String pcfName = rs.getString("fName");
+			String pclName = rs.getString("lName");
+			String cName = rs.getString("companyName");
+			String customerName;
+			if(pcfName != null && pclName != null)
+			{
+				customerName = pcfName + " " + pclName;
+			}
+			else
+			{
+				customerName = cName;
+			}
+			Reservation newReservation = new Reservation(id, DateToCalendar(reservationDate), cottageName, price, isPaid, shortWeekFrom, shortYearFrom, shortWeekTo, shortYearTo, customerName);
+			reservations.add(newReservation);			
+		}
+		return reservations;
+	}
+	
+	private static Calendar DateToCalendar(Date date)
+	{ 
+		  Calendar cal = Calendar.getInstance();
+		  cal.setTime(date);
+		  return cal;
+		}
 }
