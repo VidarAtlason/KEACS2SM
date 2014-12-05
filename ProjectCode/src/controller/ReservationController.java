@@ -15,6 +15,7 @@ import model.classes.Cottage;
 import model.classes.Customer;
 import model.classes.Reservation;
 import view.CottageWindow;
+import view.ReservationListWindow;
 
 public class ReservationController
 {
@@ -153,8 +154,7 @@ public class ReservationController
 							try 
 							{
 								ReservationConnect.insertNewReservation(newReservation);
-								JOptionPane.showMessageDialog(null, 
-										"The " + newReservation.getCottage().getCottageName() + " has been reserved by " + newReservation.getCustomer().getCustomerName() + " from week " + frame.getSelectedWeekFrom() + "/" + frame.getSelectedYearFrom() + " to week " + frame.getSelectedWeekTo() + "/" + frame.getSelectedYearTo());
+								new ReservationListWindow();
 							} catch (SQLException e1) 
 							{
 								e1.printStackTrace();
