@@ -39,8 +39,7 @@ public class ReservationController
 			e.printStackTrace();
 		}
 		frame = new CottageWindow();
-		frame.addFrameActionListener(listener);
-		
+		frame.addFrameActionListener(listener);		
 	}
 
 	/**
@@ -85,17 +84,17 @@ public class ReservationController
 					// calculate the price from all parameters and display price in frame
 					double price = 0;
 					price = newReservation.calculatePrice();
-					frame.setPricelabel("" + price);
+					frame.setPricelabel("" + price + " DKK");
 
 					// get the Customer from selected customer in combobox and get discount for customer and display discount amount in frame
 					Customer selectedCustomer = allCustomers.get(frame.getSelectedCustomer());
 					newReservation.setCustomer(selectedCustomer);
 					double discount = selectedCustomer.getDiscount();
-					frame.setDiscountLabel("" + discount);
+					frame.setDiscountLabel("" + discount + " %");
 					
 					// calculate total price and display in frame
 					newReservation.calculateTotalPrice();
-					frame.setTotalPriceLabel("" + newReservation.getTotalPrice());		
+					frame.setTotalPriceLabel("" + newReservation.getTotalPrice() + " DKK");		
 					
 					// Save button
 					if(e.getSource() == frame.btnSave)
