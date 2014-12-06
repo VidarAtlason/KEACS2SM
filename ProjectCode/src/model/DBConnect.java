@@ -23,7 +23,7 @@ public class DBConnect
 	private final static String URL = "jdbc:mysql://localhost";
     private final static String PORT = "3306";
     private final static String USER = "root";
-    private final static String PASS = "admin";//enter the password here if you have one
+    private final static String PASS = "";//enter the password here if you have one
     private final static String DB = "sunshineresort";
     
     public static Connection getConnection()

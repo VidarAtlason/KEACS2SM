@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JCheckBox;
@@ -29,14 +30,35 @@ import javax.swing.JLayeredPane;
 
 
 
+
+
+
+
+
+
+
+import com.sun.nio.zipfs.ZipPath;
+
+import model.CountryConnect;
+import model.ZipConnect;
 import model.classes.Company;
+import model.classes.Country;
 import model.classes.Customer;
 import model.classes.PrivateCustomer;
 import model.classes.Zip;
 
 
+
+
+
+
+
+
+
 //import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 
@@ -48,8 +70,6 @@ public class CustomerWindow extends JFrame {
 	private JTextField txtEmail;
 	private JTextField txtStreetName;
 	private JTextField txtStreetNumber;
-	private JTextField txtCity;
-	private JTextField txtZip;
 	private JTextField txtPaymentInfo;
 	private JTextField txtBirthDate;
 	private JTextField textField_1;
@@ -59,17 +79,22 @@ public class CustomerWindow extends JFrame {
 	private JTextField txtContactPersonName;
 	private JTextField txtContactPhoneNo;
 	private JPanel company;
+	private ArrayList<Country> countries;
+	private ArrayList<Zip> zips;
 	private final JPanel private1;
 	private JComboBox cbGender;
 	private JButton btnSave;
 	final JCheckBox chbCompany;
+	private JComboBox cbCountries;
+	private JComboBox cbZip;
 	public CustomerWindow() {
 		setTitle("Customer");
 		this.setSize(476, 600);
+		getInformation();
 		getContentPane().setLayout(null);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		txtCountryCode = new JTextField();
-		txtCountryCode.setBounds(114, 83, 336, 22);
+		txtCountryCode.setBounds(114, 83, 91, 22);
 		txtCountryCode.setColumns(10);
 		getContentPane().add(txtCountryCode);
 		
@@ -98,7 +123,7 @@ public class CustomerWindow extends JFrame {
 		getContentPane().add(lblEmail);
 		
 		txtStreetName = new JTextField();
-		txtStreetName.setBounds(114, 119, 336, 22);
+		txtStreetName.setBounds(114, 119, 166, 22);
 		txtStreetName.setColumns(10);
 		getContentPane().add(txtStreetName);
 		
@@ -115,11 +140,6 @@ public class CustomerWindow extends JFrame {
 		JLabel lblStreetNumber = new JLabel("Street Number:");
 		lblStreetNumber.setBounds(288, 122, 97, 16);
 		getContentPane().add(lblStreetNumber);
-		
-		txtCity = new JTextField();
-		txtCity.setBounds(114, 155, 336, 22);
-		txtCity.setColumns(10);
-		getContentPane().add(txtCity);
 		
 		JLabel lblZipCode = new JLabel("Zip Code:");
 		lblZipCode.setBounds(288, 158, 97, 16);
@@ -158,11 +178,6 @@ public class CustomerWindow extends JFrame {
 		btnSave = new JButton("Save");
 		btnSave.setBounds(0, 447, 85, 29);
 		getContentPane().add(btnSave);
-		
-		txtZip = new JTextField();
-		txtZip.setBounds(351, 154, 99, 22);
-		txtZip.setColumns(10);
-		getContentPane().add(txtZip);
 		
 		JLabel lblCountry = new JLabel("Country:");
 		lblCountry.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -281,30 +296,70 @@ public class CustomerWindow extends JFrame {
 		cbGender.addItem((Object)new String("Female"));
 		cbGender.setBounds(113, 103, 98, 22);
 		private1.add(cbGender);
+		
+		JComboBox comboBox = null;
+		try {
+			cbCountries = new JComboBox(CountryConnect.getAllCountries().toArray());
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		cbCountries.setBounds(114, 156, 166, 20);
+		getContentPane().add(cbCountries);
+		
+		try {
+			cbZip = new JComboBox(ZipConnect.getAllZip(false).toArray());
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		cbZip.setBounds(347, 156, 103, 20);
+		getContentPane().add(cbZip);
 		//getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtCountryCode, lblCountryCode, txtPhoneNumber, lblPhoneNumber, txtEmail, lblEmail, txtStreetName, lblStreetName, txtStreetNumber, lblStreetNumber, txtCity, lblZipCode, lblNewLabel_1, txtPaymentInfo, chbCompany, btnSave, txtZip, lblCountry, textField_1, lblId, lblCompanyName, txtCompanyName, lblCvr, txtCVR, lblFaxno, txtFaxNo, lblContactPerson, txtContactPersonName, lblContactPhoneno, txtContactPhoneNo, private1, company, lblNewLabel, txtFirstName, lblLastName, txtLastName, lblBirthdate, txtBirthDate, lblGender, cbGender}));
 		company.setVisible(false);
-		this.setVisible(true);
 	}
 	public boolean isCompany(){
 		if (chbCompany.isSelected())
 			return true;
 		return false;
 	}
+	private void getInformation(){
+		try {
+			zips = (ArrayList<Zip>) ZipConnect.getAllZip(true);
+			countries = (ArrayList<Country>) CountryConnect.getAllCountries();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	public void addButtonActionListener(ActionListener actionListener) {
 		btnSave.addActionListener(actionListener);
 	}
 	public Company getCompany(){
 		return new Company(0, txtEmail.getText(), txtPhoneNumber.getText(),
-				txtStreetName.getText(),txtStreetNumber.getText(), new Zip(Integer.parseInt(txtZip.getText()),"Norrebro"),
-				txtCountryCode.getText(), txtCompanyName.getText(), txtCVR.getText(),
+				txtStreetName.getText(),txtStreetNumber.getText(), zips.get(cbZip.getSelectedIndex()),
+				countries.get(cbCountries.getSelectedIndex()).getId(), txtCompanyName.getText(), txtCVR.getText(),
 				txtFaxNo.getText(),txtContactPersonName.getText());
 	}
-	public Customer getCustomer(){
+	public PrivateCustomer getCustomer(){
 		Calendar c = Calendar.getInstance();
-		c.set(1998, Calendar.MARCH, 15);
+		int[] bday = getBirthday(txtBirthDate.getText());
+		c.set(bday[0],bday[1]-1,bday[2]);
 		return new PrivateCustomer(0,txtEmail.getText(), txtPhoneNumber.getText(),
-				txtStreetName.getText(),txtStreetNumber.getText(), new Zip(Integer.parseInt(txtZip.getText()),"Norrebro"),
-				txtCountryCode.getText(),txtFirstName.getText(),txtLastName.getText(),(cbGender.getSelectedIndex()==1)?true:false,
+				txtStreetName.getText(),txtStreetNumber.getText(), zips.get(cbZip.getSelectedIndex()),
+				countries.get(cbCountries.getSelectedIndex()).getId(),txtFirstName.getText(),txtLastName.getText(),(cbGender.getSelectedIndex()==1)?true:false,
 				c);
+	}
+	private int[] getBirthday(String bday)
+	{
+		int[] arr = new int[3];
+		arr[0] = Integer.valueOf(bday.substring(0, 4));
+		arr[1] = Integer.valueOf(bday.substring(5, 7));
+		arr[2] = Integer.valueOf(bday.substring(8,10));
+		return arr;
+	}
+	public void addListenerToSave(ActionListener listener)
+	{
+		btnSave.addActionListener(listener);
 	}
 }

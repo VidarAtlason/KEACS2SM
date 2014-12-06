@@ -30,4 +30,7 @@ public class Zip
 	{
 		this.city = city;
 	}
+	public String toString(){
+		return String.valueOf(this.zipCode);
+	}
 }

@@ -20,7 +20,7 @@ public class PrivateCustomer extends Customer
 	}
 	
 	public PrivateCustomer(int customerId, String email, String phone,String street, String houseNumber, Zip zip,
-			String country, String firstName, String lastName, boolean gender, Calendar birthdate)
+			int country, String firstName, String lastName, boolean gender, Calendar birthdate)
 	{
 		super(customerId, email, phone, street, houseNumber, zip, country);
 		this.firstName = firstName;

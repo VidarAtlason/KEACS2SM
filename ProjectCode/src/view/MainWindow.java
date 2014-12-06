@@ -2,14 +2,35 @@ package view;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
+
 import java.awt.BorderLayout;
+
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.JButton;
+
 import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+
+import javax.swing.BoxLayout;
+
 import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.CardLayout;
+
+
+//import com.jgoodies.forms.layout.FormLayout;
+//import com.jgoodies.forms.layout.ColumnSpec;
+//import com.jgoodies.forms.layout.RowSpec;
+//import net.miginfocom.swing.MigLayout;
+import javax.swing.SwingConstants;
 import javax.swing.ListSelectionModel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 
 public class MainWindow extends JFrame {
@@ -22,31 +43,11 @@ public class MainWindow extends JFrame {
 		
 		JPanel cottages = new JPanel();
 		tabbedPane.addTab("Cottages", null, cottages, null);
-		cottages.setLayout(new BorderLayout(0, 0));
-		
-		table = new JTable();
-		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-				{null, null, null, null, null, null, null, null, null, null, null},
-			},
-			new String[] {
-				"New column", "New column", "New column", "New column", "New column", "New column", "New column", "New column", "New column", "New column", "New column"
-			}
-		));
-		cottages.add(table, BorderLayout.CENTER);
+		cottages.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		cottages.add(panel, BorderLayout.SOUTH);
+		panel.setBounds(0, 467, 779, 66);
+		cottages.add(panel);
 		panel.setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel_1 = new JPanel();
@@ -67,7 +68,34 @@ public class MainWindow extends JFrame {
 		
 		JButton btnNewButton = new JButton("Exit");
 		panel_2.add(btnNewButton);
-		this.setVisible(true);
-	}
+		
+		table = new JTable(){
+			public boolean isCellEditable(int row, int column){  
+		          return false;  
+		      }
 
+		};
+		table.setFillsViewportHeight(true);
+		table.setCellSelectionEnabled(true);
+		table.setRowSelectionAllowed(false);
+		table.setColumnSelectionAllowed(false);
+		table.setBounds(-36, 11, 825, 252);
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane.setBounds(0, 0, 779, 456);
+		cottages.add(scrollPane);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setModel(new DefaultTableModel(
+			new Object[][] {},
+			new String[] {}
+		));
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	}
+	public JTable getTable(){
+		return this.table;
+	}
+	public void addMouseAdapterToTable(MouseAdapter adapter) {
+		table.addMouseListener(adapter);
+	}
 }

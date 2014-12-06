@@ -21,8 +21,13 @@ public class CustomerConnect
 	 * @return all companies from sunshineresort.company table order by name
 	 * @throws SQLException
 	 */
-	public static List<Customer> getAllCompanies() throws SQLException
+	public static List<Customer> staticPrivateCustomers = null;
+	public static List<Customer> getAllCompanies(boolean refresh) throws SQLException
 	{
+		if(!refresh){
+			if(staticPrivateCustomers!=null)
+				return staticPrivateCustomers;
+		}
 		String sql = "";
 		Connection conn = DBConnect.getConnection();	
 		PreparedStatement prep = conn.prepareStatement(sql);	
@@ -52,8 +57,13 @@ public class CustomerConnect
 	 * @return all companies from sunshineresort.privatecustomer table order by name
 	 * @throws SQLException
 	 */
-	public static List<Customer> getAllPrivateCustomers() throws SQLException
+	public static List<Customer> staticCompanies = null;
+	public static List<Customer> getAllPrivateCustomers(boolean refresh) throws SQLException
 	{
+		if(!refresh){
+			if(staticCompanies!=null)
+				return staticCompanies;
+		}
 		String sql = "";
 		Connection conn = DBConnect.getConnection();	
 		PreparedStatement prep = conn.prepareStatement(sql);
@@ -86,7 +96,7 @@ public class CustomerConnect
 	 * @param Company
 	 * @author Martin
 	 */
-	public void addNewCustomer(PrivateCustomer newPrivateCustomer) throws SQLException{
+	public static void addNewCustomer(PrivateCustomer newPrivateCustomer) throws SQLException{
 	
 		String sql = "";
 		Connection conn = DBConnect.getConnection();	
@@ -101,7 +111,7 @@ public class CustomerConnect
 				String street = newPrivateCustomer.getStreet();
 				String housenumber = newPrivateCustomer.getHouseNumber();
 				Zip zip = newPrivateCustomer.getZip();
-				int country = Integer.parseInt(newPrivateCustomer.getCountry());
+				int country = newPrivateCustomer.getCountry();
 				boolean gender = newPrivateCustomer.getGender();
 				Calendar birthday = newPrivateCustomer.getBirthdate();
 				
@@ -113,9 +123,9 @@ public class CustomerConnect
 				// Also note, that I have been using the java.sql.Date to accurately point on the SQL Data datatype and not the Java Date datatype.
 				java.sql.Date bdate = new Date(birthday.getTimeInMillis());
 				
-				sql = " INSERT INTO customer (fName, lName, email, phoneNo, street, houseNumer, zip, country_fk, gender, birthdate)"
+				sql = " INSERT INTO privatecustomer (fName, lName, email, phoneNo, street, houseNumber, zip_fk, country_fk, gender, birthdate)"
 				        + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+				prep = conn.prepareStatement(sql);
 				
 				//Study note.
 				/* Essentially, I could do the following prep.setSomething in a different way.
@@ -152,6 +162,7 @@ public class CustomerConnect
 				prep.execute();			
 
 			} catch(Exception e){
+				e.printStackTrace();
 				System.err.println("Informations was not submitted to the database.");
 				System.err.println(e);
 			}
@@ -184,10 +195,10 @@ public class CustomerConnect
 	 * @param Company
 	 * @author Martin
 	 */
-	public void addNewCustomer(Company newCompany) throws SQLException{
+	public static void addNewCustomer(Company newCompany) throws SQLException{
 		String sql = "";
 		Connection conn = DBConnect.getConnection();	
-		PreparedStatement prep = conn.prepareStatement(sql);
+		PreparedStatement prep = null;
 
 		try{
 			try{
@@ -205,13 +216,15 @@ public class CustomerConnect
 			String address = newCompany.getStreet();
 			String addressNo = newCompany.getHouseNumber();
 			Zip zip = newCompany.getZip();								//The zip object is extraordinary and contains additional information. In this case though, we only need the zip code.
-			int country = Integer.parseInt(newCompany.getCountry());
+			int country = newCompany.getCountry();
 			
 			int zipCode = zip.getZipCode(); // Retrieving the zipcode from the zip object.
 
-			sql = " INSERT INTO company (cvr, email, name, contactName, phoneNo, faxNo, steet, houseNumber, zip_fk, country_fk)"
+			sql = " INSERT INTO company (cvr, email, name, contactName, phoneNo, faxNo, street, houseNumber, zip_fk, country_fk)"
 			        + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 					
+			
+			prep = conn.prepareStatement(sql);
 			prep.setInt (1, cvr);
 			prep.setString (2, email);
 			prep.setString (3, name);
@@ -238,6 +251,11 @@ public class CustomerConnect
 				conn.close();
 			}
 		}
+	}
+	public static List<Customer> getAllCustomersAndCompanies(boolean refresh) throws SQLException{
+		List<Customer> customers = getAllCompanies(refresh);
+		customers.addAll(getAllPrivateCustomers(refresh));
+		return customers;
 	}
 	
 }

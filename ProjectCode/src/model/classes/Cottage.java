@@ -1,6 +1,8 @@
 package model.classes;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 import model.ReservationConnect;
 
 public class Cottage
@@ -53,11 +55,6 @@ public class Cottage
 		return zip;
 	}
 	
-	public void setCottageName(String cottageName) 
-	{
-		this.cottageName = cottageName;
-	}
-	
 	/**
 	 * @author ai
 	 * @param weekFrom of the intended reservation
@@ -70,6 +67,11 @@ public class Cottage
 			return false;
 		else 
 			return true;
+	}
+	@Override
+	public String toString()
+	{
+		return this.cottageName;
 	}
 
 }

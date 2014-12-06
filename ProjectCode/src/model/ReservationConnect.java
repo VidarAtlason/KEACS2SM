@@ -1,13 +1,17 @@
 package model;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 
+import model.classes.Company;
+import model.classes.Cottage;
+import model.classes.Customer;
 import model.classes.Reservation;
 
 /**
@@ -17,6 +21,49 @@ import model.classes.Reservation;
  */
 public class ReservationConnect
 {
+	private static List<Reservation> staticReservations = null;
+	public static List<Reservation> getAllReservations(boolean refresh) throws SQLException{
+		if(!refresh)
+			if(staticReservations!= null)
+				return staticReservations;
+		String sql = "";
+		Connection conn = DBConnect.getConnection();
+		
+		
+		List<Customer> customers = CustomerConnect.getAllCustomersAndCompanies(false);
+		HashMap<Integer,Customer> custMap = new HashMap<Integer,Customer>();
+		for(Customer c: customers)
+			custMap.put(c.getCustomerId(), c);
+		
+		List<Cottage> cottages = CottageConnect.getAllCottages(true);
+		HashMap<Integer,Cottage> cottageMap = new HashMap<Integer,Cottage>();
+		for(Cottage c: cottages)
+			cottageMap.put(c.getCottageId(), c);
+		
+		List<Reservation> reservations = new ArrayList<Reservation>();
+		sql = "Select COALESCE(privatecustomer_fk, company_fk),durationFrom,durationTo,paid,price,cottage_fk from reservation order by id;";
+		
+		PreparedStatement p = conn.prepareStatement(sql);
+		ResultSet rs = p.executeQuery();
+	
+		while(rs.next())
+		{
+			int id = rs.getInt(1);
+			int durFrom = rs.getInt("durationFrom");
+			int durTo = rs.getInt("durationTo");
+			boolean isPaid = rs.getBoolean("paid");
+			double totalPrice = rs.getDouble("price");
+			int cottageId = rs.getInt("cottage_fk");
+			
+			Reservation reservation = new Reservation(custMap.get(id), cottageMap.get(cottageId), durFrom, durTo, isPaid, totalPrice);
+			reservations.add(reservation);
+		}
+		if(conn!=null)
+		{
+			conn.close();
+		}
+		return reservations;
+	}
 	/**
 	 * @author ai
 	 * @param Reservation r
@@ -78,49 +125,4 @@ public class ReservationConnect
 		else
 			return false;
 	}
-	
-	public static ArrayList<Reservation> getAllReservation() throws SQLException
-	{
-		String sql = "CALL GetAllReservations;";
-		Connection conn = DBConnect.getConnection();
-		PreparedStatement p = conn.prepareStatement(sql);
-		ResultSet rs = p.executeQuery();
-		ArrayList<Reservation> reservations = new ArrayList<Reservation>();
-		while(rs.next())
-		{
-			int id = rs.getInt("id");
-			Date reservationDate = rs.getDate("reserveDate");
-			String cottageName = rs.getString("cottageName");
-			double price = rs.getDouble("price");
-			boolean isPaid = rs.getBoolean("paid");
-			int weekFrom = rs.getInt("durationFrom");
-			int weekTo = rs.getInt("durationTo");
-			int shortYearFrom = weekFrom/100;
-			int shortWeekFrom = weekFrom - (shortYearFrom * 100);
-			int shortYearTo = weekTo/100;
-			int shortWeekTo = weekTo - (shortYearTo * 100);
-			String pcfName = rs.getString("fName");
-			String pclName = rs.getString("lName");
-			String cName = rs.getString("companyName");
-			String customerName;
-			if(pcfName != null && pclName != null)
-			{
-				customerName = pcfName + " " + pclName;
-			}
-			else
-			{
-				customerName = cName;
-			}
-			Reservation newReservation = new Reservation(id, DateToCalendar(reservationDate), cottageName, price, isPaid, shortWeekFrom, shortYearFrom, shortWeekTo, shortYearTo, customerName);
-			reservations.add(newReservation);			
-		}
-		return reservations;
-	}
-	
-	private static Calendar DateToCalendar(Date date)
-	{ 
-		  Calendar cal = Calendar.getInstance();
-		  cal.setTime(date);
-		  return cal;
-		}
 }

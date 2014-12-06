@@ -19,7 +19,7 @@ public class Company extends Customer
 		
 	}
 	public Company(int customerId, String email, String phone,String street, String houseNumber, Zip zip,
-			String country, String companyName, String CVR, String fax, String contactPersonName)
+			int country, String companyName, String CVR, String fax, String contactPersonName)
 	{
 		super(customerId, email, phone, street, houseNumber, zip, country);
 		this.companyName = companyName;

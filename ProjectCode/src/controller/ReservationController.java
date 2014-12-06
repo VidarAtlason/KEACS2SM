@@ -9,13 +9,18 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import model.CottageConnect;
 import model.CustomerConnect;
+import model.RateConnect;
 import model.ReservationConnect;
+import model.classes.Company;
 import model.classes.Cottage;
+import model.classes.CottageType;
 import model.classes.Customer;
 import model.classes.Reservation;
+import model.classes.Zip;
 import view.CottageWindow;
-import view.ReservationListWindow;
+import view.CustomerWindow;
 
 public class ReservationController
 {
@@ -23,58 +28,20 @@ public class ReservationController
 	private List<Customer> allCustomers = new ArrayList<Customer>(); 
 	private Object[] customersArray;
 	private Cottage cottage; 
-	private Object[][] allReservations;
 	
 	public ReservationController()
 	{
-		allCustomers = this.getListCustomers();
-		
-	}
-	public ReservationController(Cottage cottage) 
-	{
-		this();
-		frame = new CottageWindow();
-		this.cottage = cottage;
-		frame.setTextCottageInfo(cottage);
-		frame.addFrameActionListener(listener);
-	}
-	
-	public Object[][] getAllReservationsObject()
-	{
-		this.allReservations = Reservation.convertArrayListToObject(this.getAllReservations());
-		return this.allReservations;
-	}
-	
-	/**
-	 * @author ai
-	 * @return the combined list of customer including company and private customer to the controller
-	 */
-	public List<Customer> getListCustomers()
-	{
-		try
-		{
-			allCustomers.addAll(CustomerConnect.getAllCompanies());
-			allCustomers.addAll(CustomerConnect.getAllPrivateCustomers());
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
-		}		
-		return allCustomers;
-	}
-	
-	public ArrayList<Reservation> getAllReservations()
-	{
-		ArrayList<Reservation> reservations = new ArrayList<Reservation>();
-		try 
-		{
-			reservations = ReservationConnect.getAllReservation();
-		} catch (SQLException e) 
-		{
+		try {
+			allCustomers = CustomerConnect.getAllCustomersAndCompanies(false);
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return reservations;
+		frame = new CottageWindow();
+		frame.addFrameActionListener(listener);
+		
 	}
+
 	
 	/**
 	 * @author ai
@@ -94,78 +61,72 @@ public class ReservationController
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			// Add customer button
-			if(e.getSource() == frame.btnNewCustomer)
+			// update of selected week/year to make sure that user cannot choose a negative time window
+			int weekFrom = frame.getSelectedWeekFrom(); 
+			int weekTo = frame.getSelectedWeekTo();
+			int yearFrom = frame.getSelectedYearFrom();
+			int yearTo = frame.getSelectedYearTo();
+			if(yearFrom > yearTo)
 			{
-				new CustomerController();
+				frame.setSelectedYearTo(yearFrom - Calendar.getInstance().get(Calendar.YEAR)); 
+			}
+			if(yearFrom == yearTo)
+			{
+				if(weekFrom > weekTo)
+				{
+					frame.setSelectedWeekTo(weekFrom - 1);
+				}
 			}
 			
-			else
+			// check availability during selected duration
+			int durationFrom = convertWeekYearToInt(frame.getSelectedWeekFrom(), frame.getSelectedYearFrom());
+			int durationTo = convertWeekYearToInt(frame.getSelectedWeekTo(), frame.getSelectedYearTo());
+			Reservation newReservation = new Reservation(durationFrom, durationTo);
+			newReservation.setCottage(cottage);
+			newReservation.setIsPaid(frame.isPaidReservation());
+			try 
 			{
-				// update of selected week/year to make sure that user cannot choose a negative time window
-				int weekFrom = frame.getSelectedWeekFrom(); 
-				int weekTo = frame.getSelectedWeekTo();
-				int yearFrom = frame.getSelectedYearFrom();
-				int yearTo = frame.getSelectedYearTo();
-				if(yearFrom > yearTo)
+				if(!cottage.isAvailable(durationFrom, durationTo))
 				{
-					frame.setSelectedYearTo(yearFrom - Calendar.getInstance().get(Calendar.YEAR)); 
+					JOptionPane.showMessageDialog(null, "This cottage has been reserved for this duration. Please choose a different duration.");
 				}
-				if(yearFrom == yearTo)
+				else
 				{
-					if(weekFrom > weekTo)
-					{
-						frame.setSelectedWeekTo(weekFrom - 1);
-					}
-				}
-				
-				// check availability during selected duration
-				int durationFrom = convertWeekYearToInt(frame.getSelectedWeekFrom(), frame.getSelectedYearFrom());
-				int durationTo = convertWeekYearToInt(frame.getSelectedWeekTo(), frame.getSelectedYearTo());
-				Reservation newReservation = new Reservation(durationFrom, durationTo);
-				newReservation.setCottage(cottage);
-				newReservation.setIsPaid(frame.isPaidReservation());
-				try 
-				{
-					if(!cottage.isAvailable(durationFrom, durationTo))
-					{
-						JOptionPane.showMessageDialog(null, "This cottage has been reserved for this duration. Please choose a different duration.");
-					}
-					else
-					{
-						// calculate the price from all parameters and display price in frame
-						double price = 0;
-						price = newReservation.calculatePrice();
-						frame.setPricelabel("" + price);
+					// calculate the price from all parameters and display price in frame
+					double price = 0;
+					price = newReservation.calculatePrice();
+					frame.setPricelabel("" + price);
 
-						// get the Customer from selected customer in combobox and get discount for customer and display discount amount in frame
-						Customer selectedCustomer = allCustomers.get(frame.getSelectedCustomer());
-						newReservation.setCustomer(selectedCustomer);
-						double discount = selectedCustomer.getDiscount();
-						frame.setDiscountLabel("" + discount);
-						
-						// calculate total price and display in frame
-						newReservation.calculateTotalPrice();
-						frame.setTotalPriceLabel("" + newReservation.getTotalPrice());		
-						
-						// Save button
-						if(e.getSource() == frame.btnSave)
+					// get the Customer from selected customer in combobox and get discount for customer and display discount amount in frame
+					Customer selectedCustomer = allCustomers.get(frame.getSelectedCustomer());
+					newReservation.setCustomer(selectedCustomer);
+					double discount = selectedCustomer.getDiscount();
+					frame.setDiscountLabel("" + discount);
+					
+					// calculate total price and display in frame
+					newReservation.calculateTotalPrice();
+					frame.setTotalPriceLabel("" + newReservation.getTotalPrice());		
+					
+					// Save button
+					if(e.getSource() == frame.btnSave)
+					{
+						try 
 						{
-							try 
-							{
-								ReservationConnect.insertNewReservation(newReservation);
-								new ReservationListWindow();
-							} catch (SQLException e1) 
-							{
-								e1.printStackTrace();
-							}
-						}									
-					}
-				} catch (Exception e2) 
-				{
-					e2.printStackTrace();
+							ReservationConnect.insertNewReservation(newReservation);
+							JOptionPane.showMessageDialog(null, 
+									"The " + newReservation.getCottage().getCottageName() + " has been reserved by " + newReservation.getCustomer().getCustomerName() + " from week " + frame.getSelectedWeekFrom() + "/" + frame.getSelectedYearFrom() + " to week " + frame.getSelectedWeekTo() + "/" + frame.getSelectedYearTo());
+							
+						} catch (SQLException e1) 
+						{
+							e1.printStackTrace();
+						}
+					}			
 				}
-			}		
+			} catch (Exception e2) 
+			{
+				e2.printStackTrace();
+			}
+			
 		}
 	};
 	
@@ -179,4 +140,29 @@ public class ReservationController
 	{
 		return (yearNo * 100 + weekNo);
 	}
+	public void showFrame(Cottage cottage,int startingWeek) {
+		frame.setTextCottageInfo(cottage);
+		this.cottage = cottage;
+		frame.setSelectedWeekFrom(startingWeek);
+		frame.setSelectedWeekTo(startingWeek);
+		frame.setVisible(true);
+	}
+	public void showFrame(boolean visible)
+	{
+		frame.setVisible(visible);
+	}
+
+	public void addListener(ActionListener showCustomerFrame) {
+		frame.addToAddCustomerButton(showCustomerFrame);
+		
+	}
+	public void populateCustomers(){
+		try {
+			frame.populateCustomers();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 }

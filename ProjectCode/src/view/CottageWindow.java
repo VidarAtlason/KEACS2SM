@@ -4,19 +4,27 @@ import javax.swing.JFrame;
 
 import java.awt.Dimension;
 
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import controller.ReservationController;
+import model.CustomerConnect;
 import model.classes.Cottage;
 import model.classes.Customer;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
 public class CottageWindow extends JFrame
@@ -26,29 +34,36 @@ public class CottageWindow extends JFrame
 	JComboBox cbYearFrom;
 	JComboBox cbYearTo;
 	private JTextArea txtaCottageInfo;
-	private JComboBox cbCustomer;
+	private JComboBox<Customer> cbCustomer;
 	private JLabel lblPrice;
 	private JLabel lblDiscount;
 	private JLabel lblTotalPrice;
-	public JButton btnNewCustomer;
+	private JButton btnNewCustomer;
 	public JButton btnSave;
 	private JCheckBox chbPaid;
 	
 	public CottageWindow() {
 		setTitle("ReserveCottage");
 		getContentPane().setLayout(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
 		txtaCottageInfo = new JTextArea();
 		txtaCottageInfo.setRows(8);
 		txtaCottageInfo.setBounds(45, 30, 378, 100);
+		txtaCottageInfo.setEditable(false);
 		getContentPane().add(txtaCottageInfo);
 		
 		JLabel lblCottageInformation = new JLabel("Cottage Information");
 		lblCottageInformation.setBounds(47, 13, 125, 16);
 		getContentPane().add(lblCottageInformation);
+
 		
-		cbCustomer = new JComboBox(new ReservationController().getCustomersArray());
+		try {
+			this.populateCustomers();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		cbCustomer.setBounds(124, 143, 170, 22);
 		getContentPane().add(cbCustomer);
 		
@@ -138,8 +153,6 @@ public class CottageWindow extends JFrame
 		getContentPane().add(btnNewCustomer);
 
 		this.setSize(new Dimension(479, 449));
-		
-		this.setVisible(true);
 	}
 
 	/**
@@ -234,12 +247,20 @@ public class CottageWindow extends JFrame
 	// action listener
 	public void addFrameActionListener(ActionListener actionListener) 
 	{
-		btnNewCustomer.addActionListener(actionListener);
 		cbWeekFrom.addActionListener(actionListener);
 		cbWeekTo.addActionListener(actionListener);
 		cbYearFrom.addActionListener(actionListener);
 		cbYearTo.addActionListener(actionListener);
 		cbCustomer.addActionListener(actionListener);
-		btnSave.addActionListener(actionListener);		
+		btnSave.addActionListener(actionListener);
 	}
+
+	public void addToAddCustomerButton(ActionListener showCustomerFrame) {
+		btnNewCustomer.addActionListener(showCustomerFrame);
+	}
+	public void populateCustomers() throws SQLException
+	{
+		this.cbCustomer = new JComboBox(CustomerConnect.getAllCustomersAndCompanies(true).toArray());
+	}
+
 }

@@ -8,7 +8,7 @@ public abstract class Customer
 	protected String street;
 	protected String houseNumber;
 	protected Zip zip;
-	protected String country;
+	protected int country;
 	protected boolean isCompany;
 	
 	public Customer(int customerId)
@@ -19,11 +19,11 @@ public abstract class Customer
 		this.street = null;
 		this.houseNumber = null;
 		this.zip = null;
-		this.country = null;
+		this.country = 0;
 		this.isCompany = false;
 	}
 	
-	public Customer(int customerId, String email, String phone, String street, String houseNumber, Zip zip, String country)
+	public Customer(int customerId, String email, String phone, String street, String houseNumber, Zip zip, int country)
 	{
 		this.customerId = customerId;
 		this.email = email;
@@ -65,7 +65,7 @@ public abstract class Customer
 		return zip;
 	}
 	
-	public String getCountry()
+	public int getCountry()
 	{
 		return this.country;
 	}
@@ -99,7 +99,7 @@ public abstract class Customer
 		this.zip = zip;
 	}
 	 
-	public void setCountry(String country)
+	public void setCountry(int country)
 	{
 		this.country = country;
 	}
