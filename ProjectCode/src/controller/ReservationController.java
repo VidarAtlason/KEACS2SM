@@ -21,6 +21,7 @@ import model.classes.Reservation;
 import model.classes.Zip;
 import view.CottageWindow;
 import view.CustomerWindow;
+import view.ReservationListWindow;
 
 public class ReservationController
 {
@@ -42,17 +43,6 @@ public class ReservationController
 		
 	}
 
-	
-	/**
-	 * @author ai
-	 * @return convert the customers list of the Controller to an Object array 
-	 */
-	public Object[] getCustomersArray()
-	{
-		customersArray = allCustomers.toArray();
-		return customersArray;
-	}
-	
 	/**
 	 * @author ai
 	 */
@@ -113,9 +103,7 @@ public class ReservationController
 						try 
 						{
 							ReservationConnect.insertNewReservation(newReservation);
-							JOptionPane.showMessageDialog(null, 
-									"The " + newReservation.getCottage().getCottageName() + " has been reserved by " + newReservation.getCustomer().getCustomerName() + " from week " + frame.getSelectedWeekFrom() + "/" + frame.getSelectedYearFrom() + " to week " + frame.getSelectedWeekTo() + "/" + frame.getSelectedYearTo());
-							
+							new ReservationListWindow();
 						} catch (SQLException e1) 
 						{
 							e1.printStackTrace();

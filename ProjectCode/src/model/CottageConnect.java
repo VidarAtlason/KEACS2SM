@@ -106,4 +106,20 @@ public class CottageConnect
 		conn.close();
 		return types;
 	}
+	
+	public static String getCottageName(int cottageId) throws SQLException
+	{
+	    String name = "";
+	    String sql = "SELECT name from cottage where id = ?;";
+	    Connection conn = DBConnect.getConnection();			
+	    PreparedStatement p = conn.prepareStatement(sql);
+	    p.setInt(1, cottageId);
+	    ResultSet rs = p.executeQuery();
+	    
+	    if(rs.next())
+	    {
+		name = rs.getString("name");
+	    }
+	    return name;
+	}
 }

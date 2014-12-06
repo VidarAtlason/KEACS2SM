@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -41,21 +43,35 @@ public class ReservationConnect
 			cottageMap.put(c.getCottageId(), c);
 		
 		List<Reservation> reservations = new ArrayList<Reservation>();
-		sql = "Select COALESCE(privatecustomer_fk, company_fk),durationFrom,durationTo,paid,price,cottage_fk from reservation order by id;";
+		sql = "Select id, reserveDate, durationFrom, durationTo, paid, price, COALESCE(privatecustomer_fk, company_fk) as customerId, cottage_fk from reservation order by id;";
 		
 		PreparedStatement p = conn.prepareStatement(sql);
 		ResultSet rs = p.executeQuery();
 	
 		while(rs.next())
 		{
-			int id = rs.getInt(1);
+			int reservationId = rs.getInt("id");			
+			
+			Calendar reservationDate = Calendar.getInstance();
+			reservationDate.setTime(rs.getDate("reserveDate"));
+			
 			int durFrom = rs.getInt("durationFrom");
+			int shortYearFrom = durFrom/100;
+			int shortWeekFrom = durFrom - (shortYearFrom * 100);
+			
 			int durTo = rs.getInt("durationTo");
+			int shortYearTo = durTo/100;
+			int shortWeekTo = durTo - (shortYearTo * 100);
+			
 			boolean isPaid = rs.getBoolean("paid");
 			double totalPrice = rs.getDouble("price");
-			int cottageId = rs.getInt("cottage_fk");
 			
-			Reservation reservation = new Reservation(custMap.get(id), cottageMap.get(cottageId), durFrom, durTo, isPaid, totalPrice);
+			String customerName = Integer.toString(rs.getInt("customerId"));  
+			
+			String cottageName = CottageConnect.getCottageName(rs.getInt("cottage_fk"));
+			
+			//Reservation reservation = new Reservation(custMap.get(id), cottageMap.get(cottageId), durFrom, durTo, isPaid, totalPrice);
+			Reservation reservation = new Reservation(reservationId, reservationDate, cottageName, totalPrice, isPaid, shortWeekFrom, shortYearFrom, shortWeekTo, shortYearTo, customerName);
 			reservations.add(reservation);
 		}
 		if(conn!=null)
