@@ -45,7 +45,7 @@ public class CustomerController {
 					e.printStackTrace();
 				}
         	}
-        	showFrame(false);
+        	showFrame(false);        	
         }
       };
 

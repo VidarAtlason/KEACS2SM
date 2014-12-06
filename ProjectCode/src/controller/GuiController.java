@@ -47,7 +47,6 @@ public class GuiController {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			//Cottage cottage = new Cottage(1, new CottageType(5, "Luxury 4", 4, 1000), "Silent Log 1", "Vagabond", "56", new Zip(2400, "Norrebro"));
 			if (loginController.loginCorrect())
 			{
 				showMainWindow();

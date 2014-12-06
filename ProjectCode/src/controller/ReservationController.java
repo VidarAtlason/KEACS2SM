@@ -27,7 +27,6 @@ public class ReservationController
 {
 	private CottageWindow frame;
 	private List<Customer> allCustomers = new ArrayList<Customer>(); 
-	private Object[] customersArray;
 	private Cottage cottage; 
 	
 	public ReservationController()
