@@ -120,14 +120,14 @@ public abstract class Customer
 		}
 	}
 	
-	public boolean isCompanyCustomer()
-	{
-		return (this instanceof Company);
-	}
-	
 	public String toString()
 	{
 		return this.getCustomerName();
+	}
+	
+	public boolean isCompanyCustomer()
+	{
+		return (this instanceof Company);
 	}
 	
 	/**
