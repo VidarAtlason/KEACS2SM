@@ -6,11 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 
-import model.classes.Cottage;
-import model.classes.Customer;
 import model.classes.Reservation;
 
 /**
@@ -29,16 +26,6 @@ public class ReservationConnect
 		return staticReservations;
 	String sql = "";
 	Connection conn = DBConnect.getConnection();
-
-	List<Customer> customers = CustomerConnect.getAllCustomersAndCompanies(false);
-	HashMap<Integer, Customer> custMap = new HashMap<Integer, Customer>();
-	for (Customer c : customers)
-	    custMap.put(c.getCustomerId(), c);
-
-	List<Cottage> cottages = CottageConnect.getAllCottages(true);
-	HashMap<Integer, Cottage> cottageMap = new HashMap<Integer, Cottage>();
-	for (Cottage c : cottages)
-	    cottageMap.put(c.getCottageId(), c);
 
 	List<Reservation> reservations = new ArrayList<Reservation>();
 	sql = "Select id, reserveDate, durationFrom, durationTo, paid, price, COALESCE(privatecustomer_fk, company_fk) as customerId, cottage_fk from reservation order by id;";
@@ -68,8 +55,6 @@ public class ReservationConnect
 
 	    String cottageName = CottageConnect.getCottageName(rs.getInt("cottage_fk"));
 
-	    // Reservation reservation = new Reservation(custMap.get(id),
-	    // cottageMap.get(cottageId), durFrom, durTo, isPaid, totalPrice);
 	    Reservation reservation = new Reservation(reservationId, reservationDate, cottageName, totalPrice, isPaid, shortWeekFrom, shortYearFrom, shortWeekTo, shortYearTo, customerName);
 	    reservations.add(reservation);
 	}

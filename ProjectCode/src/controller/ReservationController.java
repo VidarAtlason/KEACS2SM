@@ -14,12 +14,12 @@ import model.ReservationConnect;
 import model.classes.Cottage;
 import model.classes.Customer;
 import model.classes.Reservation;
-import view.CottageWindow;
+import view.ReservationWindow;
 import view.ReservationListWindow;
 
 public class ReservationController
 {
-    private CottageWindow frame;
+    private ReservationWindow frame;
     private List<Customer> allCustomers = new ArrayList<Customer>();
     private Cottage cottage;
 
@@ -27,14 +27,14 @@ public class ReservationController
     {
 	try
 	{
-	    allCustomers = CustomerConnect.getAllCustomersAndCompanies(true);
+	    allCustomers = CustomerConnect.getAllCustomersAndCompanies(false);
 	}
 	catch (SQLException e)
 	{
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
-	frame = new CottageWindow();
+	frame = new ReservationWindow();
 	frame.addFrameActionListener(listener);
     }
 

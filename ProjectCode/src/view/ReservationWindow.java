@@ -17,7 +17,7 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.Calendar;
 
-public class CottageWindow extends JFrame
+public class ReservationWindow extends JFrame
 {
     private JComboBox cbWeekFrom;
     private JComboBox cbWeekTo;
@@ -32,7 +32,7 @@ public class CottageWindow extends JFrame
     public JButton btnSave;
     private JCheckBox chbPaid;
 
-    public CottageWindow()
+    public ReservationWindow()
     {
 	setTitle("ReserveCottage");
 	getContentPane().setLayout(null);

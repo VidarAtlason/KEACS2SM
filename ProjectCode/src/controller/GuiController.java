@@ -86,7 +86,7 @@ public class GuiController
 	public void actionPerformed(ActionEvent e)
 	{
 	    custController.showFrame(false);
-	   // resController.populateCustomers();
+	    resController.populateCustomers();
 	    resController.showFrame(true);
 	}
     };
