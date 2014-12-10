@@ -6,35 +6,47 @@ import java.sql.SQLException;
 import model.UserConnect;
 import view.LoginWindow;
 
-public class LoginController {
+public class LoginController
+{
 
-	private LoginWindow loginWindow;
-	
-	public LoginController()
+    private LoginWindow loginWindow;
+
+    public LoginController()
+    {
+	loginWindow = new LoginWindow();
+    }
+
+    public void addActionListener(ActionListener listener)
+    {
+	loginWindow.setListener(listener);
+    }
+
+    public boolean loginCorrect()
+    {
+	try
 	{
-		loginWindow = new LoginWindow();
+	    return UserConnect.isUser(loginWindow.getUsername(), loginWindow.getPassword());
 	}
-	public void addActionListener(ActionListener listener)
+	catch (SQLException e)
 	{
-		loginWindow.setListener(listener);
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
-	public boolean loginCorrect()
-	{
-		try {
-			return UserConnect.isUser(loginWindow.getUsername(), loginWindow.getPassword());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
-	}
-	public void showFrame(boolean b) {
-		loginWindow.setVisible(b);
-	}
-	public void resetInformation() {
-		loginWindow.clearPassword();
-	}
-	public String getUsername() {
-		return loginWindow.getUsername();
-	}
+	return false;
+    }
+
+    public void showFrame(boolean b)
+    {
+	loginWindow.setVisible(b);
+    }
+
+    public void resetInformation()
+    {
+	loginWindow.clearPassword();
+    }
+
+    public String getUsername()
+    {
+	return loginWindow.getUsername();
+    }
 }
